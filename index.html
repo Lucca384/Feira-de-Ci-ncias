@@ -1,0 +1,3375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#1A1A2E" />
+<meta name="description" content="Estética Facial: Ciência e Cuidado — Uma experiência interativa sobre a pele, sua anatomia e os cuidados baseados em ciência." />
+<title>Estética Facial — Ciência e Cuidado</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   TOKENS & BASE
+   ========================= */
+:root{
+  --ink: #15131E;
+  --ink-2: #2A2433;
+  --paper: #F5EFE3;
+  --paper-2: #EBE2D0;
+  --rose: #D88A92;
+  --rose-deep: #B6636B;
+  --rose-soft: #F2D6D9;
+  --beige: #E8DCC4;
+  --beige-2: #D9C8AA;
+  --blue: #3A4A6B;
+  --blue-deep: #1F2A44;
+  --blue-soft: #C8D2E2;
+  --yellow: #E8C547;
+  --yellow-deep: #C9A634;
+  --yellow-soft: #F4E5A3;
+  --line: rgba(21,19,30,0.18);
+  --line-soft: rgba(21,19,30,0.08);
+
+  --display: "Fraunces", "Times New Roman", serif;
+  --body: "Inter", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", "Courier New", monospace;
+
+  --easing: cubic-bezier(0.65, 0, 0.35, 1);
+  --easing-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+*::selection{background:var(--rose-deep);color:var(--paper)}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{
+  font-family:var(--body);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.5;
+  overflow-x:hidden;
+  font-feature-settings:"ss01","cv11";
+}
+
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+img,svg{display:block;max-width:100%}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* Typography utilities */
+.eyebrow{
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:400;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+  display:inline-flex;
+  align-items:center;
+  gap:14px;
+}
+.eyebrow::before{
+  content:"";
+  width:32px;height:1px;background:currentColor;display:inline-block;
+}
+.display{
+  font-family:var(--display);
+  font-weight:400;
+  letter-spacing:-0.02em;
+  line-height:0.95;
+  font-variation-settings:"opsz" 144;
+}
+.italic{font-style:italic;font-variation-settings:"opsz" 144}
+.serif{font-family:var(--display);font-variation-settings:"opsz" 144}
+.mono{font-family:var(--mono)}
+
+/* =========================
+   LAYOUT PRIMITIVES
+   ========================= */
+.container{
+  width:100%;
+  max-width:1440px;
+  margin:0 auto;
+  padding:0 clamp(20px, 5vw, 80px);
+}
+section{position:relative}
+.divider{
+  height:1px;background:var(--line);width:100%;
+}
+
+/* =========================
+   PROGRESS BAR (top)
+   ========================= */
+.scroll-progress{
+  position:fixed;top:0;left:0;height:2px;
+  background:linear-gradient(90deg, var(--rose) 0%, var(--yellow) 50%, var(--blue) 100%);
+  width:0%;z-index:200;
+  transition:width 0.1s linear;
+}
+
+/* =========================
+   NOISE OVERLAY
+   ========================= */
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:150;
+  opacity:0.04;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* =========================
+   NAVIGATION
+   ========================= */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:24px clamp(20px, 5vw, 80px);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background 0.4s var(--easing), backdrop-filter 0.4s;
+  mix-blend-mode:difference;
+  color:var(--paper);
+}
+.nav.scrolled{background:rgba(245,239,227,0.85);backdrop-filter:blur(12px);mix-blend-mode:normal;color:var(--ink)}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--display);font-size:18px;letter-spacing:-0.01em;
+}
+.brand-mark{
+  width:32px;height:32px;display:inline-block;
+}
+.nav-menu{
+  display:flex;gap:28px;align-items:center;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;
+}
+.nav-menu a{position:relative;padding:6px 0;transition:opacity 0.3s}
+.nav-menu a::after{
+  content:"";position:absolute;left:0;bottom:0;height:1px;width:0;
+  background:currentColor;transition:width 0.4s var(--easing);
+}
+.nav-menu a:hover::after{width:100%}
+.nav-toggle{
+  display:none;width:32px;height:32px;align-items:center;justify-content:center;
+}
+.nav-toggle span{
+  display:block;width:20px;height:1px;background:currentColor;
+  position:relative;transition:transform 0.3s;
+}
+.nav-toggle span::before, .nav-toggle span::after{
+  content:"";position:absolute;left:0;width:20px;height:1px;background:currentColor;
+  transition:transform 0.3s;
+}
+.nav-toggle span::before{top:-6px}
+.nav-toggle span::after{top:6px}
+
+@media (max-width: 900px){
+  .nav-menu{
+    position:fixed;inset:0;background:var(--paper);color:var(--ink);
+    flex-direction:column;justify-content:center;align-items:center;gap:24px;
+    font-size:13px;transform:translateX(100%);transition:transform 0.5s var(--easing);
+    z-index:99;
+  }
+  .nav-menu.open{transform:translateX(0)}
+  .nav-toggle{display:flex}
+  .nav-toggle.open span{background:transparent}
+  .nav-toggle.open span::before{transform:translateY(6px) rotate(45deg)}
+  .nav-toggle.open span::after{transform:translateY(-6px) rotate(-45deg)}
+}
+
+/* =========================
+   SIDE RAIL (section index)
+   ========================= */
+.side-rail{
+  position:fixed;left:24px;top:50%;transform:translateY(-50%);z-index:90;
+  display:flex;flex-direction:column;gap:14px;
+}
+.side-rail-item{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink-2);opacity:0.5;transition:opacity 0.3s, color 0.3s;
+  cursor:pointer;
+}
+.side-rail-dot{
+  width:6px;height:6px;border:1px solid currentColor;border-radius:50%;
+  transition:background 0.3s, transform 0.3s;
+}
+.side-rail-item:hover, .side-rail-item.active{opacity:1;color:var(--ink)}
+.side-rail-item.active .side-rail-dot{background:var(--rose-deep);border-color:var(--rose-deep);transform:scale(1.4)}
+@media (max-width: 1100px){.side-rail{display:none}}
+
+/* =========================
+   HERO
+   ========================= */
+.hero{
+  min-height:100svh;position:relative;overflow:hidden;
+  background:var(--ink);color:var(--paper);
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:clamp(80px, 10vh, 140px) clamp(20px, 5vw, 80px) clamp(40px, 8vh, 100px);
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 40%, rgba(216,138,146,0.18), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 20% 60%, rgba(58,74,107,0.4), transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(232,197,71,0.12), transparent 60%),
+    linear-gradient(180deg, #15131E 0%, #1F1A2E 100%);
+}
+.hero-particles{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+}
+.particle{
+  position:absolute;width:2px;height:2px;background:var(--rose-soft);
+  border-radius:50%;opacity:0;
+  animation:floatParticle 8s var(--easing) infinite;
+}
+@keyframes floatParticle{
+  0%{opacity:0;transform:translateY(20px) scale(0.5)}
+  20%{opacity:0.6}
+  100%{opacity:0;transform:translateY(-100vh) scale(1)}
+}
+
+.hero-face{
+  position:absolute;top:50%;right:-5%;transform:translateY(-50%);
+  width:60%;max-width:720px;aspect-ratio:1/1.2;z-index:2;
+  opacity:0;transition:opacity 1.5s var(--easing-out) 0.3s;
+  filter:drop-shadow(0 30px 80px rgba(216,138,146,0.15));
+}
+.hero-face.revealed{opacity:0.85}
+.hero-face svg{width:100%;height:100%}
+
+.hero-content{
+  position:relative;z-index:3;max-width:900px;
+}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:16px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--rose-soft);
+  margin-bottom:32px;
+  opacity:0;transform:translateY(20px);
+  animation:heroIn 1s var(--easing-out) 0.2s forwards;
+}
+.hero-eyebrow .pulse{
+  width:8px;height:8px;border-radius:50%;background:var(--rose);
+  box-shadow:0 0 0 0 rgba(216,138,146,0.6);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(216,138,146,0.6)}
+  70%{box-shadow:0 0 0 16px rgba(216,138,146,0)}
+  100%{box-shadow:0 0 0 0 rgba(216,138,146,0)}
+}
+.hero-title{
+  font-family:var(--display);font-size:clamp(56px, 12vw, 180px);
+  font-weight:300;line-height:0.88;letter-spacing:-0.04em;
+  font-variation-settings:"opsz" 144;
+}
+.hero-title .word{display:inline-block;overflow:hidden;vertical-align:bottom}
+.hero-title .word span{display:inline-block;transform:translateY(110%);animation:wordUp 1.2s var(--easing-out) forwards}
+.hero-title .word:nth-child(1) span{animation-delay:0.4s}
+.hero-title .word:nth-child(2) span{animation-delay:0.55s}
+.hero-title .word:nth-child(3) span{animation-delay:0.7s}
+@keyframes wordUp{to{transform:translateY(0)}}
+.hero-title em{font-style:italic;color:var(--rose);font-weight:300}
+.hero-subtitle{
+  font-family:var(--display);font-size:clamp(20px, 2.4vw, 32px);
+  line-height:1.3;letter-spacing:-0.01em;font-weight:300;
+  color:var(--paper-2);max-width:640px;margin-top:32px;
+  opacity:0;animation:heroIn 1s var(--easing-out) 1s forwards;
+}
+.hero-question{
+  margin-top:48px;display:flex;align-items:flex-start;gap:24px;
+  opacity:0;animation:heroIn 1s var(--easing-out) 1.3s forwards;
+}
+.hero-question-line{
+  width:1px;background:var(--rose-soft);align-self:stretch;opacity:0.5;
+}
+.hero-question-text{
+  font-family:var(--display);font-size:clamp(22px, 2.6vw, 36px);
+  line-height:1.25;letter-spacing:-0.01em;font-weight:300;
+  color:var(--paper);
+}
+.hero-question-text em{color:var(--yellow);font-style:italic}
+
+.hero-scroll{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:4;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--rose-soft);opacity:0;animation:heroIn 1s var(--easing-out) 1.6s forwards;
+}
+.hero-scroll-line{
+  width:1px;height:48px;background:currentColor;position:relative;overflow:hidden;
+}
+.hero-scroll-line::after{
+  content:"";position:absolute;left:0;top:0;width:100%;height:50%;background:var(--yellow);
+  animation:scrollHint 2.4s var(--easing) infinite;
+}
+@keyframes scrollHint{
+  0%{transform:translateY(-100%)}
+  100%{transform:translateY(200%)}
+}
+@keyframes heroIn{to{opacity:1;transform:translateY(0)}}
+
+.hero-mouse-target{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+}
+
+/* =========================
+   SECTION — ABOUT
+   ========================= */
+.about{
+  padding:clamp(80px, 14vh, 200px) 0;
+  background:var(--paper);
+  position:relative;
+}
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px, 8vw, 120px);align-items:start;
+}
+.about-left{position:sticky;top:120px}
+.about-eyebrow{margin-bottom:32px}
+.about-title{
+  font-family:var(--display);font-size:clamp(40px, 5.5vw, 88px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;
+}
+.about-title em{font-style:italic;color:var(--rose-deep)}
+.about-right{
+  font-family:var(--display);font-size:clamp(20px, 2vw, 28px);
+  line-height:1.4;font-weight:300;color:var(--ink-2);
+  letter-spacing:-0.01em;
+}
+.about-right p{margin-bottom:24px}
+.about-right p strong{font-weight:500;color:var(--ink);font-style:italic}
+.about-tags{
+  margin-top:64px;display:flex;flex-wrap:wrap;gap:8px;
+}
+.tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  padding:8px 14px;border:1px solid var(--line);
+  color:var(--ink-2);transition:all 0.3s var(--easing);
+}
+.tag:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+@media (max-width: 900px){
+  .about-grid{grid-template-columns:1fr;gap:40px}
+  .about-left{position:static}
+}
+
+/* Stat band */
+.stat-band{
+  background:var(--ink);color:var(--paper);
+  padding:clamp(60px, 10vh, 120px) 0;
+  overflow:hidden;
+}
+.stat-grid{
+  display:grid;grid-template-columns:repeat(4, 1fr);gap:0;
+  border-top:1px solid rgba(245,239,227,0.15);
+  border-bottom:1px solid rgba(245,239,227,0.15);
+}
+.stat{
+  padding:clamp(24px, 4vw, 48px) clamp(16px, 2vw, 32px);
+  border-right:1px solid rgba(245,239,227,0.15);
+  position:relative;
+}
+.stat:last-child{border-right:none}
+.stat-num{
+  font-family:var(--display);font-size:clamp(40px, 5vw, 72px);
+  font-weight:300;line-height:1;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;color:var(--rose);
+}
+.stat-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--paper-2);margin-top:16px;opacity:0.7;
+}
+@media (max-width: 900px){
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .stat:nth-child(2){border-right:none}
+  .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid rgba(245,239,227,0.15)}
+}
+
+/* =========================
+   SECTION — EXPLORE FACE
+   ========================= */
+.explore{
+  background:var(--paper-2);
+  padding:clamp(80px, 14vh, 200px) 0;
+  position:relative;overflow:hidden;
+}
+.explore-header{
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;
+  margin-bottom:clamp(60px, 10vh, 120px);align-items:end;
+}
+.explore-title{
+  font-family:var(--display);font-size:clamp(40px, 5.5vw, 88px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;
+}
+.explore-title em{font-style:italic;color:var(--blue)}
+.explore-intro{
+  font-family:var(--body);font-size:16px;line-height:1.6;
+  color:var(--ink-2);max-width:480px;
+}
+
+.face-stage{
+  display:grid;grid-template-columns:1fr 380px;gap:60px;align-items:start;
+}
+.face-canvas{
+  position:relative;aspect-ratio:1/1.1;
+  background:var(--ink);border-radius:2px;overflow:hidden;
+  cursor:crosshair;
+}
+.face-svg{width:100%;height:100%;position:relative;z-index:2}
+.face-svg .layer{transition:opacity 0.6s var(--easing), transform 0.6s var(--easing)}
+.face-svg .hotspot{
+  cursor:pointer;transition:opacity 0.4s;
+}
+.face-svg .hotspot:hover{opacity:0.8}
+
+.face-info{
+  background:var(--ink);color:var(--paper);
+  padding:32px 28px;min-height:520px;
+  display:flex;flex-direction:column;
+  position:relative;
+}
+.face-info::before{
+  content:"";position:absolute;top:0;left:0;width:48px;height:1px;background:var(--rose);
+}
+.face-info-num{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--rose);margin-bottom:24px;
+}
+.face-info-title{
+  font-family:var(--display);font-size:42px;font-weight:300;line-height:1;
+  letter-spacing:-0.02em;margin-bottom:24px;
+  font-variation-settings:"opsz" 144;
+}
+.face-info-title em{font-style:italic;color:var(--yellow)}
+.face-info-text{
+  font-family:var(--body);font-size:14px;line-height:1.7;
+  color:var(--paper-2);flex:1;
+}
+.face-info-meta{
+  margin-top:32px;padding-top:24px;
+  border-top:1px solid rgba(245,239,227,0.15);
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-soft);
+}
+.face-info-back{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-soft);margin-top:16px;padding:8px 0;
+  border-top:1px solid rgba(245,239,227,0.15);
+  transition:color 0.3s;
+}
+.face-info-back:hover{color:var(--yellow)}
+
+.face-controls{
+  position:absolute;top:24px;left:24px;z-index:3;
+  display:flex;flex-direction:column;gap:6px;
+  background:rgba(21,19,30,0.7);backdrop-filter:blur(8px);
+  padding:8px;border-radius:2px;
+}
+.face-control{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--paper-2);padding:6px 10px;
+  transition:all 0.3s;text-align:left;
+  border-left:2px solid transparent;
+}
+.face-control:hover{color:var(--paper)}
+.face-control.active{color:var(--yellow);border-left-color:var(--yellow)}
+.face-control svg{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:middle}
+
+@media (max-width: 1000px){
+  .face-stage{grid-template-columns:1fr;gap:32px}
+  .face-info{min-height:auto}
+}
+
+/* =========================
+   SECTION — ANATOMY (LAYERS)
+   ========================= */
+.anatomy{
+  background:var(--ink);color:var(--paper);
+  padding:clamp(80px, 14vh, 200px) 0;
+  position:relative;overflow:hidden;
+}
+.anatomy-header{margin-bottom:clamp(60px, 10vh, 120px);max-width:900px}
+.anatomy-title{
+  font-family:var(--display);font-size:clamp(40px, 5.5vw, 88px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;margin-top:24px;
+}
+.anatomy-title em{font-style:italic;color:var(--rose)}
+
+.layers{
+  position:relative;height:120vh;min-height:900px;
+  display:flex;align-items:center;justify-content:center;
+}
+.layers-stack{
+  position:sticky;top:10vh;width:100%;max-width:1100px;height:80vh;max-height:700px;
+}
+.layer-card{
+  position:absolute;inset:0;
+  border:1px solid rgba(245,239,227,0.15);
+  display:grid;grid-template-columns:1fr 1fr;
+  background:var(--ink-2);
+  transform-origin:center;
+  transition:transform 0.8s var(--easing), opacity 0.6s var(--easing);
+  overflow:hidden;
+}
+.layer-card[data-layer="0"]{z-index:4}
+.layer-card[data-layer="1"]{z-index:3}
+.layer-card[data-layer="2"]{z-index:2}
+.layer-card[data-layer="3"]{z-index:1}
+
+.layer-visual{
+  position:relative;background:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  border-right:1px solid rgba(245,239,227,0.15);
+}
+.layer-visual svg{width:80%;height:80%}
+.layer-content{
+  padding:clamp(32px, 4vw, 64px);
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.layer-num{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--rose);
+}
+.layer-name{
+  font-family:var(--display);font-size:clamp(36px, 4.5vw, 64px);
+  font-weight:300;line-height:1;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;margin-top:16px;
+}
+.layer-name em{font-style:italic}
+.layer-desc{
+  font-family:var(--body);font-size:15px;line-height:1.65;
+  color:var(--paper-2);margin-top:32px;max-width:380px;
+}
+.layer-data{
+  display:grid;grid-template-columns:repeat(3, 1fr);gap:16px;
+  padding-top:24px;border-top:1px solid rgba(245,239,227,0.15);
+  margin-top:24px;
+}
+.layer-data-item .ldi-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-soft);margin-bottom:6px;
+}
+.layer-data-item .ldi-value{
+  font-family:var(--display);font-size:22px;font-weight:400;letter-spacing:-0.01em;
+  color:var(--paper);
+}
+
+@media (max-width: 900px){
+  .layer-card{grid-template-columns:1fr;grid-template-rows:200px 1fr}
+  .layer-visual{border-right:none;border-bottom:1px solid rgba(245,239,227,0.15)}
+  .layer-content{padding:24px}
+}
+
+/* =========================
+   SECTION — AGING SLIDER
+   ========================= */
+.aging{
+  background:var(--paper);
+  padding:clamp(80px, 14vh, 200px) 0;
+  position:relative;
+}
+.aging-header{
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;
+  margin-bottom:clamp(60px, 10vh, 120px);align-items:end;
+}
+.aging-title{
+  font-family:var(--display);font-size:clamp(40px, 5.5vw, 88px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;
+}
+.aging-title em{font-style:italic;color:var(--rose-deep)}
+.aging-intro{
+  font-family:var(--body);font-size:16px;line-height:1.6;
+  color:var(--ink-2);max-width:480px;
+}
+
+.aging-stage{
+  display:grid;grid-template-columns:1fr 360px;gap:60px;align-items:center;
+}
+.aging-face{
+  position:relative;aspect-ratio:1/1.1;
+  background:linear-gradient(180deg, var(--paper-2) 0%, var(--beige) 100%);
+  border:1px solid var(--line);
+  overflow:hidden;
+}
+.aging-face svg{width:100%;height:100%;position:relative;z-index:1}
+.aging-overlay{
+  position:absolute;inset:0;pointer-events:none;
+  z-index:2;mix-blend-mode:multiply;
+}
+.aging-meta{
+  position:absolute;top:24px;left:24px;z-index:3;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--ink-2);
+}
+.aging-meta .age{
+  font-family:var(--display);font-size:48px;font-weight:300;letter-spacing:-0.02em;
+  color:var(--ink);display:block;line-height:1;margin-top:4px;
+}
+.aging-info{
+  padding:32px 0;
+}
+.aging-info-list{list-style:none;margin-bottom:32px}
+.aging-info-item{
+  padding:20px 0;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+  opacity:0.4;transition:opacity 0.5s;
+}
+.aging-info-item.active{opacity:1}
+.aging-info-item .aii-label{
+  font-family:var(--body);font-size:14px;color:var(--ink);font-weight:500;
+}
+.aging-info-item .aii-bar{
+  width:120px;height:2px;background:var(--line);position:relative;margin-top:6px;
+  flex-shrink:0;
+}
+.aging-info-item .aii-bar::after{
+  content:"";position:absolute;left:0;top:0;height:100%;background:var(--rose-deep);
+  width:var(--w, 100%);transition:width 0.5s var(--easing);
+}
+
+.slider-wrap{
+  margin-top:40px;
+}
+.slider-label{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--ink-2);margin-bottom:14px;
+}
+.slider-label .current{font-family:var(--display);font-size:32px;color:var(--ink);letter-spacing:-0.01em}
+.slider{
+  -webkit-appearance:none;appearance:none;width:100%;height:2px;
+  background:var(--line);outline:none;cursor:pointer;
+}
+.slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:24px;height:24px;
+  background:var(--rose-deep);border:4px solid var(--paper);
+  box-shadow:0 0 0 1px var(--rose-deep);
+  cursor:grab;border-radius:50%;
+}
+.slider::-webkit-slider-thumb:active{cursor:grabbing}
+.slider::-moz-range-thumb{
+  width:24px;height:24px;background:var(--rose-deep);
+  border:4px solid var(--paper);box-shadow:0 0 0 1px var(--rose-deep);
+  cursor:grab;border-radius:50%;
+}
+.slider-ticks{
+  display:flex;justify-content:space-between;margin-top:14px;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;
+  color:var(--ink-2);
+}
+
+@media (max-width: 1000px){
+  .aging-stage{grid-template-columns:1fr;gap:32px}
+}
+
+/* =========================
+   SECTION — PROCEDURES
+   ========================= */
+.procedures{
+  background:var(--paper-2);
+  padding:clamp(80px, 14vh, 200px) 0;
+}
+.proc-header{margin-bottom:clamp(60px, 10vh, 120px);max-width:900px}
+.proc-title{
+  font-family:var(--display);font-size:clamp(40px, 5.5vw, 88px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;margin-top:24px;
+}
+.proc-title em{font-style:italic;color:var(--blue)}
+
+.proc-tabs{
+  display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:60px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.proc-tabs::-webkit-scrollbar{display:none}
+.proc-tab{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  padding:18px 24px;color:var(--ink-2);position:relative;
+  white-space:nowrap;transition:color 0.3s;
+  border-bottom:1px solid transparent;margin-bottom:-1px;
+}
+.proc-tab:hover{color:var(--ink)}
+.proc-tab.active{color:var(--ink);border-bottom-color:var(--rose-deep)}
+.proc-tab .num{color:var(--rose-deep);margin-right:8px;font-weight:500}
+
+.proc-panel{
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;
+  min-height:480px;
+}
+.proc-visual{
+  aspect-ratio:1/1;background:var(--ink);position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.proc-visual svg{width:80%;height:80%}
+.proc-content{padding-top:24px}
+.proc-content .eyebrow{margin-bottom:24px}
+.proc-name{
+  font-family:var(--display);font-size:clamp(40px, 5vw, 72px);
+  font-weight:300;line-height:1;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;margin-bottom:32px;
+}
+.proc-name em{font-style:italic;color:var(--rose)}
+.proc-mechanism{
+  font-family:var(--body);font-size:16px;line-height:1.6;color:var(--ink-2);
+  margin-bottom:32px;max-width:520px;
+}
+.proc-steps{
+  list-style:none;border-top:1px solid var(--line);
+}
+.proc-step{
+  display:grid;grid-template-columns:40px 1fr;gap:16px;align-items:start;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.proc-step-num{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;
+  color:var(--rose-deep);padding-top:2px;
+}
+.proc-step-text{font-size:14px;line-height:1.5;color:var(--ink)}
+.proc-warning{
+  margin-top:40px;padding:20px 24px;background:var(--ink);color:var(--paper);
+  font-family:var(--body);font-size:13px;line-height:1.5;
+  display:flex;gap:16px;align-items:flex-start;
+}
+.proc-warning svg{flex-shrink:0;margin-top:2px}
+.proc-warning strong{color:var(--yellow);font-weight:500}
+
+@media (max-width: 900px){
+  .proc-panel{grid-template-columns:1fr;gap:32px}
+}
+
+/* =========================
+   SECTION — INGREDIENTS
+   ========================= */
+.ingredients{
+  background:var(--ink);color:var(--paper);
+  padding:clamp(80px, 14vh, 200px) 0;
+  position:relative;overflow:hidden;
+}
+.ing-header{margin-bottom:clamp(60px, 10vh, 120px);max-width:900px}
+.ing-title{
+  font-family:var(--display);font-size:clamp(40px, 5.5vw, 88px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;margin-top:24px;
+}
+.ing-title em{font-style:italic;color:var(--yellow)}
+
+.ing-stage{
+  display:grid;grid-template-columns:380px 1fr;gap:60px;
+  min-height:600px;
+}
+.ing-list{
+  list-style:none;
+}
+.ing-item{
+  padding:24px 0;border-bottom:1px solid rgba(245,239,227,0.15);
+  display:flex;justify-content:space-between;align-items:center;
+  cursor:pointer;transition:padding 0.4s var(--easing);
+  position:relative;
+}
+.ing-item::before{
+  content:"";position:absolute;left:-20px;top:50%;transform:translateY(-50%);
+  width:0;height:1px;background:var(--yellow);transition:width 0.4s;
+}
+.ing-item:hover::before, .ing-item.active::before{width:14px}
+.ing-item-name{
+  font-family:var(--display);font-size:28px;font-weight:300;letter-spacing:-0.01em;
+  color:var(--paper-2);transition:color 0.3s;
+}
+.ing-item:hover .ing-item-name, .ing-item.active .ing-item-name{color:var(--paper)}
+.ing-item-sym{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;
+  color:var(--rose-soft);
+}
+.ing-detail{
+  background:var(--ink-2);padding:clamp(32px, 4vw, 56px);
+  display:flex;flex-direction:column;gap:32px;
+  border:1px solid rgba(245,239,227,0.1);
+}
+.ing-detail-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
+.ing-detail-name{
+  font-family:var(--display);font-size:clamp(36px, 4vw, 56px);
+  font-weight:300;line-height:1;letter-spacing:-0.02em;
+  font-variation-settings:"opsz" 144;
+}
+.ing-detail-name em{font-style:italic;color:var(--yellow)}
+.ing-detail-svg{width:80px;height:80px;flex-shrink:0}
+.ing-detail-svg svg{width:100%;height:100%}
+.ing-question{
+  padding:24px;background:rgba(245,239,227,0.04);
+  border-left:2px solid var(--yellow);
+}
+.ing-question-q{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-soft);margin-bottom:12px;
+}
+.ing-question-txt{
+  font-family:var(--display);font-size:20px;line-height:1.3;font-weight:300;
+  color:var(--paper);
+}
+.ing-options{display:flex;flex-direction:column;gap:8px}
+.ing-option{
+  padding:16px 20px;border:1px solid rgba(245,239,227,0.15);
+  text-align:left;font-size:14px;color:var(--paper-2);
+  transition:all 0.3s;position:relative;
+  display:flex;align-items:center;gap:12px;
+}
+.ing-option::before{
+  content:"";width:14px;height:14px;border:1px solid currentColor;border-radius:50%;
+  flex-shrink:0;transition:all 0.3s;
+}
+.ing-option:hover{color:var(--paper);border-color:var(--paper)}
+.ing-option.correct{color:var(--yellow);border-color:var(--yellow);background:rgba(232,197,71,0.05)}
+.ing-option.correct::before{background:var(--yellow);border-color:var(--yellow)}
+.ing-option.wrong{color:var(--rose);border-color:var(--rose);opacity:0.5}
+.ing-option.wrong::before{background:var(--rose);border-color:var(--rose)}
+.ing-option:disabled{cursor:default}
+.ing-explain{
+  font-size:14px;line-height:1.6;color:var(--paper-2);
+  padding:20px;background:rgba(245,239,227,0.04);
+  border:1px dashed rgba(245,239,227,0.2);
+  opacity:0;transform:translateY(10px);
+  transition:all 0.5s var(--easing-out);
+}
+.ing-explain.show{opacity:1;transform:translateY(0)}
+.ing-explain strong{color:var(--yellow);font-weight:500}
+
+@media (max-width: 1000px){
+  .ing-stage{grid-template-columns:1fr;gap:32px}
+  .ing-detail-top{flex-direction:column;gap:16px}
+}
+
+/* =========================
+   SECTION — ROUTINE BUILDER
+   ========================= */
+.routine{
+  background:var(--paper);
+  padding:clamp(80px, 14vh, 200px) 0;
+}
+.rt-header{margin-bottom:clamp(60px, 10vh, 120px);max-width:900px}
+.rt-title{
+  font-family:var(--display);font-size:clamp(40px, 5.5vw, 88px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;margin-top:24px;
+}
+.rt-title em{font-style:italic;color:var(--rose-deep)}
+
+.rt-board{
+  display:grid;grid-template-columns:1fr 1fr;gap:32px;
+  margin-bottom:40px;
+}
+.rt-col{
+  background:var(--paper-2);border:1px solid var(--line);
+  padding:32px;min-height:420px;display:flex;flex-direction:column;
+}
+.rt-col-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--line);
+}
+.rt-col-name{
+  font-family:var(--display);font-size:36px;font-weight:300;letter-spacing:-0.02em;
+}
+.rt-col-name em{font-style:italic;color:var(--rose-deep)}
+.rt-col-time{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--ink-2);
+}
+.rt-slots{display:flex;flex-direction:column;gap:12px;flex:1}
+.rt-slot{
+  border:1px dashed var(--line);padding:18px 20px;
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--body);font-size:14px;color:var(--ink-2);
+  transition:all 0.3s;
+  min-height:64px;
+}
+.rt-slot.filled{border-style:solid;background:var(--paper);color:var(--ink)}
+.rt-slot .slot-num{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;
+  color:var(--rose-deep);width:24px;flex-shrink:0;
+}
+.rt-slot.drag-over{border-color:var(--rose-deep);background:rgba(216,138,146,0.05)}
+.rt-slot .slot-text{flex:1}
+.rt-slot .slot-remove{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.2em;
+  color:var(--ink-2);opacity:0.5;transition:opacity 0.3s;
+}
+.rt-slot.filled .slot-remove{opacity:1;cursor:pointer}
+.rt-slot.filled .slot-remove:hover{color:var(--rose-deep)}
+
+.rt-pool{
+  background:var(--ink);color:var(--paper);
+  padding:32px;
+}
+.rt-pool-title{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-soft);margin-bottom:20px;
+}
+.rt-pool-items{
+  display:grid;grid-template-columns:repeat(4, 1fr);gap:12px;
+}
+.rt-piece{
+  background:rgba(245,239,227,0.06);border:1px solid rgba(245,239,227,0.2);
+  padding:18px 16px;text-align:center;
+  cursor:grab;transition:all 0.3s;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  user-select:none;
+}
+.rt-piece:hover{background:rgba(232,197,71,0.1);border-color:var(--yellow);transform:translateY(-2px)}
+.rt-piece:active{cursor:grabbing}
+.rt-piece.used{opacity:0.3;pointer-events:none;filter:grayscale(1)}
+.rt-piece svg{width:24px;height:24px;color:var(--yellow)}
+.rt-piece-label{
+  font-family:var(--body);font-size:12px;font-weight:500;
+  color:var(--paper);
+}
+.rt-piece-sub{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.15em;
+  color:var(--rose-soft);
+}
+.rt-feedback{
+  margin-top:24px;padding:24px;
+  background:var(--paper-2);border:1px solid var(--line);
+  font-size:14px;line-height:1.5;color:var(--ink-2);
+  display:none;
+}
+.rt-feedback.show{display:block;animation:wordUp 0.6s var(--easing-out)}
+.rt-feedback strong{color:var(--rose-deep);font-weight:500}
+.rt-feedback.success{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.rt-feedback.success strong{color:var(--yellow)}
+
+@media (max-width: 900px){
+  .rt-board{grid-template-columns:1fr}
+  .rt-pool-items{grid-template-columns:1fr 1fr}
+}
+
+/* =========================
+   SECTION — QUESTIONNAIRE
+   ========================= */
+.quiz{
+  background:var(--paper-2);
+  padding:clamp(80px, 14vh, 200px) 0;
+}
+.qz-header{margin-bottom:clamp(60px, 10vh, 120px);max-width:900px}
+.qz-title{
+  font-family:var(--display);font-size:clamp(40px, 5.5vw, 88px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;margin-top:24px;
+}
+.qz-title em{font-style:italic;color:var(--blue)}
+
+.qz-stage{
+  display:grid;grid-template-columns:280px 1fr;gap:60px;
+  align-items:start;
+}
+.qz-side{
+  position:sticky;top:120px;
+}
+.qz-progress-wrap{
+  margin-bottom:32px;
+}
+.qz-progress-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--ink-2);margin-bottom:10px;
+}
+.qz-progress-label .current{color:var(--ink);font-size:14px;font-weight:500}
+.qz-progress{
+  height:2px;background:var(--line);position:relative;overflow:hidden;
+}
+.qz-progress::after{
+  content:"";position:absolute;left:0;top:0;height:100%;
+  background:var(--ink);width:var(--p, 0%);transition:width 0.5s var(--easing);
+}
+.qz-numbers{
+  display:grid;grid-template-columns:repeat(8, 1fr);gap:6px;margin-top:24px;
+}
+.qz-num{
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:11px;
+  border:1px solid var(--line);color:var(--ink-2);
+  transition:all 0.3s;
+}
+.qz-num.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.qz-num.done{background:var(--rose-soft);color:var(--ink);border-color:var(--rose)}
+
+.qz-side-info{
+  font-family:var(--body);font-size:13px;line-height:1.6;color:var(--ink-2);
+  margin-top:40px;padding-top:24px;border-top:1px solid var(--line);
+}
+.qz-side-info strong{color:var(--ink);font-weight:500}
+
+.qz-card{
+  background:var(--paper);border:1px solid var(--line);
+  padding:clamp(32px, 4vw, 64px);min-height:480px;
+  display:flex;flex-direction:column;
+  position:relative;
+}
+.qz-q-num{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-deep);margin-bottom:24px;
+}
+.qz-q-text{
+  font-family:var(--display);font-size:clamp(28px, 3.5vw, 48px);
+  font-weight:300;line-height:1.15;letter-spacing:-0.02em;
+  font-variation-settings:"opsz" 144;margin-bottom:48px;
+}
+.qz-options{display:flex;flex-direction:column;gap:12px;flex:1}
+.qz-option{
+  padding:18px 24px;border:1px solid var(--line);
+  text-align:left;font-size:15px;color:var(--ink);
+  transition:all 0.3s;position:relative;
+  display:flex;align-items:center;gap:16px;
+  background:transparent;
+}
+.qz-option .opt-marker{
+  width:18px;height:18px;border:1px solid currentColor;border-radius:50%;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s;
+}
+.qz-option .opt-marker::after{
+  content:"";width:0;height:0;border-radius:50%;background:currentColor;
+  transition:all 0.3s;
+}
+.qz-option:hover{border-color:var(--ink);background:rgba(21,19,30,0.02)}
+.qz-option.selected{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.qz-option.selected .opt-marker::after{width:8px;height:8px}
+.qz-nav{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:40px;padding-top:24px;border-top:1px solid var(--line);
+}
+.qz-btn{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  padding:14px 24px;border:1px solid var(--ink);
+  transition:all 0.3s var(--easing);
+  display:inline-flex;align-items:center;gap:10px;
+}
+.qz-btn.primary{background:var(--ink);color:var(--paper)}
+.qz-btn.primary:hover{background:var(--rose-deep);border-color:var(--rose-deep)}
+.qz-btn.ghost{color:var(--ink)}
+.qz-btn.ghost:hover{background:var(--ink);color:var(--paper)}
+.qz-btn:disabled{opacity:0.3;pointer-events:none}
+
+.qz-result{
+  display:none;
+  text-align:left;
+}
+.qz-result.show{display:block;animation:wordUp 0.6s var(--easing-out)}
+.qz-result-band{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--rose-deep);margin-bottom:20px;
+}
+.qz-result-title{
+  font-family:var(--display);font-size:clamp(48px, 6vw, 96px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;margin-bottom:32px;
+}
+.qz-result-title em{font-style:italic;color:var(--blue)}
+.qz-result-score{
+  display:flex;align-items:baseline;gap:16px;margin-bottom:32px;
+  padding-bottom:24px;border-bottom:1px solid var(--line);
+}
+.qz-score-num{
+  font-family:var(--display);font-size:96px;font-weight:300;line-height:1;
+  letter-spacing:-0.04em;color:var(--ink);
+}
+.qz-score-num em{font-style:italic;color:var(--rose-deep);font-size:48px;vertical-align:top}
+.qz-score-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--ink-2);
+}
+.qz-result-text{
+  font-family:var(--display);font-size:22px;line-height:1.4;font-weight:300;
+  color:var(--ink-2);max-width:600px;margin-bottom:40px;
+}
+
+@media (max-width: 1000px){
+  .qz-stage{grid-template-columns:1fr;gap:32px}
+  .qz-side{position:static}
+}
+
+/* =========================
+   SECTION — MYTH/TRUTH
+   ========================= */
+.myth{
+  background:var(--ink);color:var(--paper);
+  padding:clamp(80px, 14vh, 200px) 0;
+}
+.my-header{margin-bottom:clamp(60px, 10vh, 120px);max-width:900px}
+.my-title{
+  font-family:var(--display);font-size:clamp(40px, 5.5vw, 88px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;margin-top:24px;
+}
+.my-title em{font-style:italic;color:var(--rose)}
+
+.my-stage{
+  display:grid;grid-template-columns:1fr 360px;gap:60px;align-items:start;
+}
+.my-card{
+  background:var(--ink-2);border:1px solid rgba(245,239,227,0.15);
+  padding:clamp(32px, 4vw, 64px);min-height:480px;
+  display:flex;flex-direction:column;gap:32px;
+}
+.my-counter{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-soft);
+}
+.my-counter .now{color:var(--paper);font-size:14px}
+.my-statement{
+  font-family:var(--display);font-size:clamp(28px, 3.5vw, 44px);
+  font-weight:300;line-height:1.2;letter-spacing:-0.02em;
+  font-variation-settings:"opsz" 144;flex:1;
+  display:flex;align-items:center;
+}
+.my-statement em{font-style:italic;color:var(--yellow)}
+.my-choices{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+.my-choice{
+  padding:24px;border:1px solid rgba(245,239,227,0.15);
+  font-family:var(--display);font-size:24px;font-weight:300;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--paper-2);
+  transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:12px;
+  position:relative;overflow:hidden;
+}
+.my-choice::before{
+  content:"";position:absolute;inset:0;background:var(--rose);opacity:0;
+  transition:opacity 0.4s;z-index:-1;
+}
+.my-choice:hover{color:var(--paper);border-color:var(--rose)}
+.my-choice.correct{background:var(--ink);border-color:var(--yellow);color:var(--yellow)}
+.my-choice.wrong{background:var(--ink);border-color:var(--rose);color:var(--rose);opacity:0.5}
+.my-choice svg{width:20px;height:20px}
+
+.my-explain{
+  padding:20px;background:rgba(245,239,227,0.04);
+  border:1px dashed rgba(245,239,227,0.2);
+  font-size:14px;line-height:1.6;color:var(--paper-2);
+  opacity:0;transform:translateY(10px);transition:all 0.5s var(--easing-out);
+  display:none;
+}
+.my-explain.show{opacity:1;transform:translateY(0);display:block}
+.my-explain strong{color:var(--yellow);font-weight:500}
+
+.my-side{
+  background:var(--ink-2);border:1px solid rgba(245,239,227,0.15);
+  padding:32px;
+}
+.my-side-title{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-soft);margin-bottom:24px;
+}
+.my-score-display{
+  text-align:center;padding:24px 0;
+}
+.my-score-big{
+  font-family:var(--display);font-size:96px;font-weight:300;line-height:1;
+  letter-spacing:-0.04em;color:var(--yellow);
+  font-variation-settings:"opsz" 144;
+}
+.my-score-big .of{font-size:36px;color:var(--rose-soft);vertical-align:top}
+.my-score-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-soft);margin-top:12px;
+}
+.my-progress{
+  margin-top:24px;display:flex;flex-direction:column;gap:6px;
+}
+.my-progress-item{
+  height:2px;background:rgba(245,239,227,0.1);position:relative;overflow:hidden;
+}
+.my-progress-item.correct::after{background:var(--yellow)}
+.my-progress-item.wrong::after{background:var(--rose)}
+.my-progress-item::after{
+  content:"";position:absolute;left:0;top:0;height:100%;width:100%;
+  transform:translateX(-100%);transition:transform 0.5s var(--easing);
+}
+.my-progress-item.done::after{transform:translateX(0)}
+
+@media (max-width: 1000px){
+  .my-stage{grid-template-columns:1fr;gap:32px}
+}
+
+/* =========================
+   SECTION — DID YOU KNOW
+   ========================= */
+.know{
+  background:var(--paper);
+  padding:clamp(80px, 14vh, 200px) 0;
+  position:relative;overflow:hidden;
+}
+.kn-header{margin-bottom:clamp(60px, 10vh, 120px);max-width:900px}
+.kn-title{
+  font-family:var(--display);font-size:clamp(40px, 5.5vw, 88px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;margin-top:24px;
+}
+.kn-title em{font-style:italic;color:var(--rose-deep)}
+
+.kn-grid{
+  display:grid;grid-template-columns:repeat(3, 1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);
+}
+.kn-card{
+  background:var(--paper);padding:clamp(32px, 3vw, 48px);
+  min-height:280px;display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:background 0.4s;
+}
+.kn-card::before{
+  content:"";position:absolute;left:0;top:0;width:0;height:2px;background:var(--rose-deep);
+  transition:width 0.6s var(--easing);
+}
+.kn-card:hover::before{width:100%}
+.kn-card:hover{background:var(--paper-2)}
+.kn-num{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;
+  color:var(--rose-deep);
+}
+.kn-text{
+  font-family:var(--display);font-size:clamp(22px, 2vw, 28px);
+  font-weight:300;line-height:1.25;letter-spacing:-0.01em;
+  font-variation-settings:"opsz" 144;
+  margin-top:32px;
+}
+.kn-text em{font-style:italic;color:var(--rose-deep)}
+.kn-tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--ink-2);margin-top:32px;align-self:flex-start;
+  padding-top:16px;border-top:1px solid var(--line);width:100%;
+}
+.kn-svg{width:48px;height:48px;color:var(--rose-deep);margin-top:16px}
+
+@media (max-width: 900px){
+  .kn-grid{grid-template-columns:1fr}
+}
+
+/* =========================
+   SECTION — CHALLENGE
+   ========================= */
+.challenge{
+  background:var(--ink);color:var(--paper);
+  padding:clamp(80px, 14vh, 200px) 0;
+  position:relative;overflow:hidden;
+}
+.ch-header{
+  text-align:center;margin-bottom:clamp(60px, 10vh, 120px);max-width:800px;margin-left:auto;margin-right:auto;
+}
+.ch-title{
+  font-family:var(--display);font-size:clamp(48px, 7vw, 120px);
+  font-weight:300;line-height:0.95;letter-spacing:-0.04em;
+  font-variation-settings:"opsz" 144;margin-top:24px;
+}
+.ch-title em{font-style:italic;color:var(--yellow)}
+
+.ch-stage{
+  max-width:900px;margin:0 auto;
+}
+.ch-card{
+  background:var(--ink-2);border:1px solid rgba(245,239,227,0.15);
+  padding:clamp(32px, 4vw, 64px);min-height:480px;
+  display:flex;flex-direction:column;gap:32px;position:relative;
+}
+.ch-meta{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-soft);
+}
+.ch-q-num{color:var(--paper);font-size:14px}
+.ch-question{
+  font-family:var(--display);font-size:clamp(28px, 3.5vw, 44px);
+  font-weight:300;line-height:1.2;letter-spacing:-0.02em;
+  font-variation-settings:"opsz" 144;flex:1;display:flex;align-items:center;
+}
+.ch-options{display:grid;grid-template-columns:1fr;gap:10px}
+.ch-option{
+  padding:16px 20px;border:1px solid rgba(245,239,227,0.15);
+  text-align:left;font-size:14px;color:var(--paper-2);
+  transition:all 0.3s;background:transparent;
+  display:flex;align-items:center;gap:12px;
+}
+.ch-option .opt-letter{
+  font-family:var(--display);font-size:20px;font-style:italic;
+  color:var(--rose-soft);width:24px;flex-shrink:0;
+}
+.ch-option:hover{color:var(--paper);border-color:var(--paper)}
+.ch-option.correct{color:var(--yellow);border-color:var(--yellow);background:rgba(232,197,71,0.05)}
+.ch-option.wrong{color:var(--rose);border-color:var(--rose);opacity:0.5}
+.ch-feedback{
+  padding:16px 20px;font-size:13px;line-height:1.5;color:var(--paper-2);
+  background:rgba(245,239,227,0.04);border-left:2px solid var(--yellow);
+  opacity:0;max-height:0;overflow:hidden;transition:all 0.5s var(--easing);
+}
+.ch-feedback.show{opacity:1;max-height:200px;padding:16px 20px}
+
+.ch-final{
+  display:none;text-align:center;padding:40px 0;
+}
+.ch-final.show{display:block;animation:wordUp 0.8s var(--easing-out)}
+.ch-final-band{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--rose-soft);margin-bottom:16px;
+}
+.ch-final-title{
+  font-family:var(--display);font-size:clamp(40px, 5vw, 72px);
+  font-weight:300;line-height:1;letter-spacing:-0.03em;
+  font-variation-settings:"opsz" 144;margin-bottom:16px;
+}
+.ch-final-title em{font-style:italic;color:var(--yellow)}
+.ch-final-score{
+  font-family:var(--display);font-size:120px;font-weight:300;line-height:1;
+  letter-spacing:-0.04em;color:var(--paper);
+  font-variation-settings:"opsz" 144;
+  margin:32px 0;
+}
+.ch-final-score .of{font-size:48px;color:var(--rose-soft);vertical-align:top}
+.ch-final-text{
+  font-family:var(--display);font-size:22px;line-height:1.4;font-weight:300;
+  color:var(--paper-2);max-width:540px;margin:0 auto 40px;
+}
+.ch-confetti{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;
+}
+.confetti{
+  position:absolute;width:8px;height:14px;top:-20px;
+  animation:fall 3s linear forwards;
+}
+@keyframes fall{
+  to{transform:translateY(120vh) rotate(720deg)}
+}
+
+@media (max-width: 700px){
+  .ch-options{grid-template-columns:1fr}
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+.footer{
+  background:var(--ink);color:var(--paper);
+  padding:80px 0 40px;border-top:1px solid rgba(245,239,227,0.15);
+}
+.foot-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr;gap:60px;margin-bottom:60px;
+}
+.foot-brand{
+  font-family:var(--display);font-size:36px;font-weight:300;letter-spacing:-0.02em;
+  line-height:1;
+}
+.foot-brand em{font-style:italic;color:var(--rose)}
+.foot-text{
+  font-size:14px;line-height:1.6;color:var(--paper-2);
+  margin-top:20px;max-width:380px;
+}
+.foot-col h4{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-soft);margin-bottom:20px;font-weight:400;
+}
+.foot-col ul{list-style:none}
+.foot-col li{margin-bottom:10px;font-size:13px;color:var(--paper-2)}
+.foot-col a{transition:color 0.3s}
+.foot-col a:hover{color:var(--yellow)}
+.foot-bottom{
+  padding-top:24px;border-top:1px solid rgba(245,239,227,0.15);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rose-soft);
+}
+@media (max-width: 800px){
+  .foot-grid{grid-template-columns:1fr;gap:40px}
+}
+
+/* =========================
+   UTILITY
+   ========================= */
+.fade-in{opacity:0;transform:translateY(40px);transition:opacity 0.8s var(--easing-out), transform 0.8s var(--easing-out)}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.split-word .word{overflow:hidden;display:inline-block}
+.split-word .word span{display:inline-block;transform:translateY(110%);transition:transform 0.8s var(--easing-out)}
+.split-word .word.visible span{transform:translateY(0)}
+
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="grain"></div>
+
+<!-- ============== NAV ============== -->
+<nav class="nav" id="nav">
+  <a href="#hero" class="brand">
+    <svg class="brand-mark" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1"/>
+      <circle cx="16" cy="16" r="7" stroke="currentColor" stroke-width="1"/>
+      <circle cx="16" cy="16" r="1.5" fill="currentColor"/>
+    </svg>
+    <span>Estética Facial</span>
+  </a>
+  <div class="nav-menu" id="navMenu">
+    <a href="#about">Sobre</a>
+    <a href="#explore">Explore</a>
+    <a href="#anatomy">Anatomia</a>
+    <a href="#aging">Envelhecimento</a>
+    <a href="#procedures">Procedimentos</a>
+    <a href="#ingredients">Ingredientes</a>
+    <a href="#routine">Rotina</a>
+    <a href="#quiz">Perfil</a>
+    <a href="#myth">Mitos</a>
+    <a href="#challenge">Desafio</a>
+  </div>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">
+    <span></span>
+  </button>
+</nav>
+
+<!-- ============== SIDE RAIL ============== -->
+<aside class="side-rail" id="sideRail">
+  <div class="side-rail-item active" data-target="hero"><span class="side-rail-dot"></span><span>Início</span></div>
+  <div class="side-rail-item" data-target="about"><span class="side-rail-dot"></span><span>Sobre</span></div>
+  <div class="side-rail-item" data-target="explore"><span class="side-rail-dot"></span><span>Rosto</span></div>
+  <div class="side-rail-item" data-target="anatomy"><span class="side-rail-dot"></span><span>Anatomia</span></div>
+  <div class="side-rail-item" data-target="aging"><span class="side-rail-dot"></span><span>Tempo</span></div>
+  <div class="side-rail-item" data-target="procedures"><span class="side-rail-dot"></span><span>Procedimentos</span></div>
+  <div class="side-rail-item" data-target="ingredients"><span class="side-rail-dot"></span><span>Ingredientes</span></div>
+  <div class="side-rail-item" data-target="routine"><span class="side-rail-dot"></span><span>Rotina</span></div>
+  <div class="side-rail-item" data-target="quiz"><span class="side-rail-dot"></span><span>Perfil</span></div>
+  <div class="side-rail-item" data-target="myth"><span class="side-rail-dot"></span><span>Mitos</span></div>
+  <div class="side-rail-item" data-target="challenge"><span class="side-rail-dot"></span><span>Desafio</span></div>
+</aside>
+
+<!-- ============== HERO ============== -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-particles" id="particles"></div>
+
+  <!-- Anatomical face -->
+  <div class="hero-face" id="heroFace">
+    <svg viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#F2D6D9"/>
+          <stop offset="100%" stop-color="#D88A92"/>
+        </linearGradient>
+        <linearGradient id="muscleGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#C98890"/>
+          <stop offset="100%" stop-color="#B6636B"/>
+        </linearGradient>
+        <radialGradient id="vesselGrad">
+          <stop offset="0%" stop-color="#E8C547" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#E8C547" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Face outline -->
+      <g class="face-outline" stroke="#F2D6D9" stroke-width="1" fill="none" opacity="0.4">
+        <ellipse cx="250" cy="280" rx="160" ry="220"/>
+      </g>
+
+      <!-- Inner structures (revealed progressively) -->
+      <g class="face-anatomy" opacity="0">
+        <!-- Muscle lines -->
+        <g stroke="#D88A92" stroke-width="0.8" fill="none" opacity="0.5">
+          <path d="M150 220 Q200 200 250 220 Q300 200 350 220"/>
+          <path d="M150 280 Q200 260 250 280 Q300 260 350 280"/>
+          <path d="M180 340 Q220 320 250 340 Q280 320 320 340"/>
+          <path d="M200 180 Q220 160 250 170"/>
+          <path d="M300 180 Q280 160 250 170"/>
+          <path d="M180 400 Q220 380 250 400 Q280 380 320 400"/>
+          <path d="M220 450 L280 450"/>
+          <path d="M230 480 L270 480"/>
+        </g>
+
+        <!-- Vessels -->
+        <g stroke="#E8C547" stroke-width="0.6" fill="none" opacity="0.6">
+          <path d="M150 200 Q140 280 160 360 Q170 420 200 460"/>
+          <path d="M350 200 Q360 280 340 360 Q330 420 300 460"/>
+          <path d="M170 250 Q190 260 210 250"/>
+          <path d="M330 250 Q310 260 290 250"/>
+          <path d="M250 160 L250 200"/>
+        </g>
+
+        <!-- Nerve nodes -->
+        <g fill="#E8C547" opacity="0.7">
+          <circle cx="190" cy="240" r="2"/>
+          <circle cx="310" cy="240" r="2"/>
+          <circle cx="250" cy="200" r="2"/>
+          <circle cx="200" cy="320" r="1.5"/>
+          <circle cx="300" cy="320" r="1.5"/>
+        </g>
+
+        <!-- Subtle contour map -->
+        <g fill="#F2D6D9" opacity="0.15">
+          <ellipse cx="250" cy="280" rx="140" ry="190"/>
+        </g>
+      </g>
+
+      <!-- Reference cross -->
+      <g stroke="#F2D6D9" stroke-width="0.3" opacity="0.2">
+        <line x1="0" y1="280" x2="500" y2="280"/>
+        <line x1="250" y1="0" x2="250" y2="600"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="pulse"></span>
+      <span>Feira de Ciências · 2025</span>
+    </div>
+    <h1 class="hero-title">
+      <span class="word"><span>Estética</span></span>
+      <span class="word"><span><em>F</em>acial.</span></span>
+    </h1>
+    <p class="hero-subtitle">Ciência e cuidado: uma investigação sobre a pele, suas camadas e os processos que sustentam a estética facial contemporânea.</p>
+    <div class="hero-question">
+      <div class="hero-question-line"></div>
+      <div class="hero-question-text">Você sabe o que realmente <em>acontece com a sua pele</em> a cada dia, a cada idade, a cada gesto?</div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Explore</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- ============== ABOUT ============== -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-left fade-in">
+        <div class="eyebrow about-eyebrow">Sobre o projeto</div>
+        <h2 class="about-title">Por trás de <em>cada gesto</em>, uma camada de ciência.</h2>
+      </div>
+      <div class="about-right fade-in">
+        <p>Este projeto nasce da interseção entre <strong>anatomia</strong>, <strong>ciência cosmética</strong> e <strong>estética</strong> — três campos que, vistos de perto, se entrelaçam de forma indissociável.</p>
+        <p>A pele é um órgão. A face é uma arquitetura. E cada cuidado aplicado sobre ela é, antes de tudo, um <strong>ato bioquímico</strong>.</p>
+        <p>Ao longo desta experiência, você vai atravessar camadas, deslizar pelo tempo, desmontar procedimentos e desvendar ingredientes. Tudo para transformar um cuidado cotidiano em <strong>consciência científica</strong>.</p>
+        <div class="about-tags">
+          <span class="tag">Anatomia</span>
+          <span class="tag">Cosméticos</span>
+          <span class="tag">Procedimentos</span>
+          <span class="tag">Fotoproteção</span>
+          <span class="tag">Envelhecimento</span>
+          <span class="tag">Rotina</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== STAT BAND ============== -->
+<section class="stat-band">
+  <div class="container">
+    <div class="stat-grid">
+      <div class="stat fade-in">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Camadas principais da pele</div>
+      </div>
+      <div class="stat fade-in">
+        <div class="stat-num">~2m²</div>
+        <div class="stat-label">Área total do maior órgão</div>
+      </div>
+      <div class="stat fade-in">
+        <div class="stat-num">43</div>
+        <div class="stat-label">Músculos faciais em ação</div>
+      </div>
+      <div class="stat fade-in">
+        <div class="stat-num">28d</div>
+        <div class="stat-label">Renovação epidérmica média</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== EXPLORE FACE ============== -->
+<section class="explore" id="explore">
+  <div class="container">
+    <div class="explore-header">
+      <div>
+        <div class="eyebrow fade-in">Experiência interativa</div>
+        <h2 class="explore-title fade-in">Explore <em>este rosto.</em></h2>
+      </div>
+      <p class="explore-intro fade-in">Toque em uma das camadas ou estruturas para revelar a informação anatômica correspondente. Uma investigação em tempo real sobre o que existe sob a superfície.</p>
+    </div>
+
+    <div class="face-stage">
+      <div class="face-canvas" id="faceCanvas">
+        <div class="face-controls">
+          <button class="face-control active" data-layer="all">
+            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1"><circle cx="5" cy="5" r="4"/></svg>
+            Completo
+          </button>
+          <button class="face-control" data-layer="epiderme">
+            <svg viewBox="0 0 10 10" fill="currentColor"><rect x="2" y="2" width="6" height="2"/></svg>
+            Epiderme
+          </button>
+          <button class="face-control" data-layer="derme">
+            <svg viewBox="0 0 10 10" fill="currentColor"><rect x="2" y="4" width="6" height="2"/></svg>
+            Derme
+          </button>
+          <button class="face-control" data-layer="hipoderme">
+            <svg viewBox="0 0 10 10" fill="currentColor"><rect x="2" y="6" width="6" height="2"/></svg>
+            Hipoderme
+          </button>
+        </div>
+        <svg class="face-svg" viewBox="0 0 500 560" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="epiG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F2D6D9"/>
+              <stop offset="100%" stop-color="#E8B4B8"/>
+            </linearGradient>
+            <linearGradient id="derG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#D88A92"/>
+              <stop offset="100%" stop-color="#B6636B"/>
+            </linearGradient>
+            <linearGradient id="hipG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#E8C547"/>
+              <stop offset="100%" stop-color="#C9A634"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Face base shape (head) -->
+          <path id="faceShape" d="M250 50 C 350 50, 420 150, 420 280 C 420 420, 350 510, 250 510 C 150 510, 80 420, 80 280 C 80 150, 150 50, 250 50 Z"
+                fill="url(#epiG)" stroke="#B6636B" stroke-width="1"/>
+
+          <!-- Epiderme layer (outer) -->
+          <g class="layer" data-name="epiderme">
+            <path d="M250 50 C 350 50, 420 150, 420 280 C 420 420, 350 510, 250 510 C 150 510, 80 420, 80 280 C 80 150, 150 50, 250 50 Z"
+                  fill="url(#epiG)" opacity="0.9" class="hotspot" data-info="epiderme"/>
+            <!-- Skin texture -->
+            <g opacity="0.3" stroke="#B6636B" stroke-width="0.3" fill="none">
+              <circle cx="150" cy="200" r="3"/>
+              <circle cx="200" cy="170" r="2"/>
+              <circle cx="280" cy="180" r="3"/>
+              <circle cx="350" cy="200" r="2"/>
+              <circle cx="180" cy="280" r="2"/>
+              <circle cx="320" cy="290" r="3"/>
+              <circle cx="220" cy="380" r="2"/>
+              <circle cx="290" cy="400" r="3"/>
+            </g>
+          </g>
+
+          <!-- Derme layer -->
+          <g class="layer" data-name="derme" style="display:none">
+            <path d="M250 70 C 340 70, 400 160, 400 280 C 400 400, 340 490, 250 490 C 160 490, 100 400, 100 280 C 100 160, 160 70, 250 70 Z"
+                  fill="url(#derG)" opacity="0.9" class="hotspot" data-info="derme"/>
+            <!-- Vessels in derme -->
+            <g stroke="#F5EFE3" stroke-width="0.8" fill="none" opacity="0.6" class="hotspot" data-info="vasos">
+              <path d="M150 200 Q140 280 160 360"/>
+              <path d="M350 200 Q360 280 340 360"/>
+              <path d="M250 160 L250 220"/>
+              <path d="M170 250 L210 250"/>
+              <path d="M330 250 L290 250"/>
+            </g>
+            <!-- Collagen fibers -->
+            <g stroke="#F2D6D9" stroke-width="0.4" fill="none" opacity="0.5" class="hotspot" data-info="colageno">
+              <path d="M120 220 Q200 250 250 220 Q300 250 380 220"/>
+              <path d="M120 280 Q200 310 250 280 Q300 310 380 280"/>
+              <path d="M120 340 Q200 370 250 340 Q300 370 380 340"/>
+            </g>
+            <!-- Nerves -->
+            <g fill="#E8C547" class="hotspot" data-info="nervos">
+              <circle cx="190" cy="240" r="3"/>
+              <circle cx="310" cy="240" r="3"/>
+              <circle cx="250" cy="200" r="3"/>
+              <circle cx="200" cy="320" r="2.5"/>
+              <circle cx="300" cy="320" r="2.5"/>
+            </g>
+            <!-- Sweat gland -->
+            <g class="hotspot" data-info="glandulas">
+              <circle cx="170" cy="320" r="6" fill="none" stroke="#F5EFE3" stroke-width="0.8" opacity="0.7"/>
+              <circle cx="170" cy="320" r="2" fill="#F5EFE3" opacity="0.8"/>
+              <circle cx="330" cy="340" r="6" fill="none" stroke="#F5EFE3" stroke-width="0.8" opacity="0.7"/>
+              <circle cx="330" cy="340" r="2" fill="#F5EFE3" opacity="0.8"/>
+            </g>
+          </g>
+
+          <!-- Hipoderme -->
+          <g class="layer" data-name="hipoderme" style="display:none">
+            <path d="M250 90 C 330 90, 380 170, 380 280 C 380 400, 320 470, 250 470 C 180 470, 120 400, 120 280 C 120 170, 170 90, 250 90 Z"
+                  fill="url(#hipG)" opacity="0.9" class="hotspot" data-info="hipoderme"/>
+            <!-- Adipose tissue cells -->
+            <g fill="#F5EFE3" opacity="0.5">
+              <circle cx="200" cy="220" r="6"/>
+              <circle cx="220" cy="240" r="5"/>
+              <circle cx="280" cy="220" r="6"/>
+              <circle cx="300" cy="240" r="5"/>
+              <circle cx="180" cy="280" r="5"/>
+              <circle cx="320" cy="280" r="5"/>
+              <circle cx="220" cy="320" r="6"/>
+              <circle cx="280" cy="320" r="6"/>
+              <circle cx="200" cy="370" r="5"/>
+              <circle cx="300" cy="370" r="5"/>
+            </g>
+          </g>
+
+          <!-- Muscles (overlay) -->
+          <g class="layer muscles" data-name="musculos" style="display:none">
+            <g fill="none" stroke="#1A1A2E" stroke-width="0.6" opacity="0.7" class="hotspot" data-info="musculos">
+              <ellipse cx="200" cy="220" rx="20" ry="10" transform="rotate(-20 200 220)"/>
+              <ellipse cx="300" cy="220" rx="20" ry="10" transform="rotate(20 300 220)"/>
+              <path d="M150 280 Q250 270 350 280" />
+              <path d="M160 320 Q250 310 340 320" />
+              <path d="M180 380 Q250 370 320 380" />
+              <path d="M210 420 L290 420" />
+            </g>
+          </g>
+
+          <!-- Facial features (always on) -->
+          <g class="features">
+            <!-- Eyes -->
+            <ellipse cx="195" cy="240" rx="18" ry="10" fill="#15131E"/>
+            <ellipse cx="305" cy="240" rx="18" ry="10" fill="#15131E"/>
+            <!-- Nose -->
+            <path d="M250 260 L240 320 L250 330 L260 320 Z" fill="none" stroke="#15131E" stroke-width="0.8" opacity="0.6"/>
+            <!-- Mouth -->
+            <path d="M220 380 Q250 395 280 380" fill="none" stroke="#B6636B" stroke-width="2"/>
+          </g>
+
+          <!-- Labels -->
+          <g class="labels" font-family="JetBrains Mono" font-size="9" fill="#F5EFE3" opacity="0.8">
+            <text x="40" y="280" letter-spacing="0.2em">F</text>
+            <text x="450" y="280" letter-spacing="0.2em">F</text>
+          </g>
+        </svg>
+      </div>
+
+      <aside class="face-info" id="faceInfo">
+        <div class="face-info-num" id="faceInfoNum">01 / 08</div>
+        <h3 class="face-info-title" id="faceInfoTitle"><em>Visão</em> geral</h3>
+        <p class="face-info-text" id="faceInfoText">A face humana é uma arquitetura estratificada. Nesta experiência, clique em qualquer região do rosto para investigar a camada ou estrutura correspondente. Use os controles no canto superior para alternar entre as camadas.</p>
+        <div class="face-info-meta">
+          <span>Anatomia</span>
+          <span id="faceInfoCode">FIG. 01</span>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ANATOMY LAYERS ============== -->
+<section class="anatomy" id="anatomy">
+  <div class="container">
+    <div class="anatomy-header">
+      <div class="eyebrow fade-in" style="color:var(--rose-soft)">Estrutura vertical</div>
+      <h2 class="anatomy-title fade-in">A pele é <em>um universo em camadas.</em></h2>
+    </div>
+  </div>
+
+  <div class="layers">
+    <div class="container">
+      <div class="layers-stack" id="layersStack">
+        <article class="layer-card" data-layer="3">
+          <div class="layer-visual">
+            <svg viewBox="0 0 200 200">
+              <defs><linearGradient id="hip3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8C547"/><stop offset="100%" stop-color="#C9A634"/></linearGradient></defs>
+              <rect x="20" y="40" width="160" height="40" fill="url(#hip3)" stroke="#15131E" stroke-width="0.5"/>
+              <g fill="#F5EFE3" opacity="0.6">
+                <circle cx="60" cy="60" r="5"/><circle cx="90" cy="55" r="6"/><circle cx="120" cy="62" r="5"/>
+                <circle cx="150" cy="58" r="6"/><circle cx="75" cy="68" r="4"/><circle cx="135" cy="70" r="5"/>
+              </g>
+            </svg>
+          </div>
+          <div class="layer-content">
+            <div>
+              <div class="layer-num">Camada 03</div>
+              <h3 class="layer-name"><em>Hipoderme</em></h3>
+            </div>
+            <p class="layer-desc">A camada mais profunda, composta principalmente por tecido adiposo. Atua como reserva energética, isolante térmico e amortecedor mecânico para as estruturas superiores.</p>
+            <div class="layer-data">
+              <div class="layer-data-item"><div class="ldi-label">Composição</div><div class="ldi-value">Adipócitos</div></div>
+              <div class="layer-data-item"><div class="ldi-label">Função</div><div class="ldi-value">Isolamento</div></div>
+              <div class="layer-data-item"><div class="ldi-label">Espessura</div><div class="ldi-value">Variável</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="layer-card" data-layer="2">
+          <div class="layer-visual">
+            <svg viewBox="0 0 200 200">
+              <defs><linearGradient id="der2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D88A92"/><stop offset="100%" stop-color="#B6636B"/></linearGradient></defs>
+              <rect x="20" y="40" width="160" height="120" fill="url(#der2)" stroke="#15131E" stroke-width="0.5"/>
+              <g stroke="#F2D6D9" stroke-width="0.4" fill="none" opacity="0.5">
+                <path d="M30 60 Q100 80 170 60"/><path d="M30 100 Q100 120 170 100"/><path d="M30 140 Q100 160 170 140"/>
+              </g>
+              <g stroke="#F5EFE3" stroke-width="0.6" fill="none" opacity="0.7">
+                <path d="M50 70 L50 130"/><path d="M150 70 L150 130"/>
+              </g>
+              <g fill="#E8C547"><circle cx="80" cy="90" r="2"/><circle cx="120" cy="110" r="2"/></g>
+            </svg>
+          </div>
+          <div class="layer-content">
+            <div>
+              <div class="layer-num">Camada 02</div>
+              <h3 class="layer-name"><em>Derme</em></h3>
+            </div>
+            <p class="layer-desc">Sustentação e vitalidade. Aqui se encontram as fibras de colágeno e elastina, vasos sanguíneos, nervos, folículos pilosos e glândulas. Responsável pela firmeza e elasticidade.</p>
+            <div class="layer-data">
+              <div class="layer-data-item"><div class="ldi-label">Estrutura</div><div class="ldi-value">Colágeno</div></div>
+              <div class="layer-data-item"><div class="ldi-label">Vascular</div><div class="ldi-value">Densa</div></div>
+              <div class="layer-data-item"><div class="ldi-label">Inervação</div><div class="ldi-value">Presente</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="layer-card" data-layer="1">
+          <div class="layer-visual">
+            <svg viewBox="0 0 200 200">
+              <defs><linearGradient id="der1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F2D6D9"/><stop offset="100%" stop-color="#E8B4B8"/></linearGradient></defs>
+              <rect x="20" y="40" width="160" height="40" fill="url(#der1)" stroke="#15131E" stroke-width="0.5"/>
+              <g fill="#B6636B" opacity="0.4">
+                <rect x="30" y="48" width="8" height="3"/><rect x="45" y="50" width="8" height="3"/><rect x="60" y="48" width="8" height="3"/>
+                <rect x="80" y="52" width="8" height="3"/><rect x="95" y="48" width="8" height="3"/><rect x="115" y="50" width="8" height="3"/>
+                <rect x="135" y="48" width="8" height="3"/><rect x="155" y="50" width="8" height="3"/>
+              </g>
+              <g fill="#D88A92" opacity="0.3">
+                <circle cx="40" cy="70" r="1.5"/><circle cx="80" cy="68" r="1.5"/><circle cx="120" cy="72" r="1.5"/><circle cx="160" cy="68" r="1.5"/>
+              </g>
+            </svg>
+          </div>
+          <div class="layer-content">
+            <div>
+              <div class="layer-num">Camada 01</div>
+              <h3 class="layer-name"><em>Epiderme</em></h3>
+            </div>
+            <p class="layer-desc">A barreira. A camada mais externa, em constante renovação. Protege contra agentes externos, regula a perda de água e define a primeira impressão da pele: textura e luminosidade.</p>
+            <div class="layer-data">
+              <div class="layer-data-item"><div class="ldi-label">Tipo</div><div class="ldi-value">Estratificada</div></div>
+              <div class="layer-data-item"><div class="ldi-label">Renovação</div><div class="ldi-value">28 dias</div></div>
+              <div class="layer-data-item"><div class="ldi-label">Função</div><div class="ldi-value">Barreira</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="layer-card" data-layer="0">
+          <div class="layer-visual">
+            <svg viewBox="0 0 200 200">
+              <rect x="20" y="40" width="160" height="120" fill="none" stroke="#15131E" stroke-width="0.5" stroke-dasharray="2 2"/>
+              <text x="100" y="100" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="14" fill="#F5EFE3" opacity="0.5">espaço</text>
+              <text x="100" y="120" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="14" fill="#F5EFE3" opacity="0.5">exterior</text>
+            </svg>
+          </div>
+          <div class="layer-content">
+            <div>
+              <div class="layer-num">00</div>
+              <h3 class="layer-name">A <em>pele</em></h3>
+            </div>
+            <p class="layer-desc">O maior órgão do corpo humano. Uma interface viva entre o organismo e o mundo — onde estética, proteção, percepção e cuidado se encontram em cada milímetro quadrado.</p>
+            <div class="layer-data">
+              <div class="layer-data-item"><div class="ldi-label">Peso</div><div class="ldi-value">~4 kg</div></div>
+              <div class="layer-data-item"><div class="ldi-label">Área</div><div class="ldi-value">~2 m²</div></div>
+              <div class="layer-data-item"><div class="ldi-label">Camadas</div><div class="ldi-value">3 +</div></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== AGING ============== -->
+<section class="aging" id="aging">
+  <div class="container">
+    <div class="aging-header">
+      <div>
+        <div class="eyebrow fade-in">Linha do tempo</div>
+        <h2 class="aging-title fade-in">O tempo <em>deixa marcas.</em><br>Vamos observar.</h2>
+      </div>
+      <p class="aging-intro fade-in">Arraste o marcador para percorrer décadas. A pele reage ao tempo com transformações visíveis e invisíveis — do colágeno à hidratação.</p>
+    </div>
+
+    <div class="aging-stage">
+      <div class="aging-face" id="agingFace">
+        <div class="aging-meta">
+          Idade
+          <span class="age" id="agingAge">25</span>
+        </div>
+        <svg viewBox="0 0 400 440" id="agingSvg">
+          <defs>
+            <linearGradient id="youngSkin" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F2D6D9"/>
+              <stop offset="100%" stop-color="#E8B4B8"/>
+            </linearGradient>
+            <linearGradient id="oldSkin" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#D9C8AA"/>
+              <stop offset="100%" stop-color="#B8A689"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Base face -->
+          <path id="agingFaceShape" d="M200 30 C 290 30, 350 110, 350 220 C 350 340, 290 410, 200 410 C 110 410, 50 340, 50 220 C 50 110, 110 30, 200 30 Z"
+                fill="url(#youngSkin)"/>
+
+          <!-- Wrinkles (visible at older ages) -->
+          <g id="agingWrinkles" stroke="#8B7355" fill="none" opacity="0">
+            <path d="M70 150 Q100 145 130 155" stroke-width="0.8"/>
+            <path d="M270 150 Q300 145 330 155" stroke-width="0.8"/>
+            <path d="M80 200 Q120 195 160 200" stroke-width="0.7"/>
+            <path d="M240 200 Q280 195 320 200" stroke-width="0.7"/>
+            <path d="M150 290 Q200 285 250 290" stroke-width="0.8"/>
+            <path d="M120 330 Q200 325 280 330" stroke-width="0.7"/>
+            <path d="M150 360 Q200 358 250 360" stroke-width="0.6"/>
+            <path d="M80 240 L100 240" stroke-width="0.5"/>
+            <path d="M300 240 L320 240" stroke-width="0.5"/>
+            <path d="M180 180 L200 180" stroke-width="0.5"/>
+            <path d="M200 180 L220 180" stroke-width="0.5"/>
+          </g>
+
+          <!-- Spots (visible at older ages) -->
+          <g id="agingSpots" fill="#8B6F47" opacity="0">
+            <circle cx="120" cy="120" r="3"/>
+            <circle cx="280" cy="140" r="2.5"/>
+            <circle cx="100" cy="250" r="2"/>
+            <circle cx="300" cy="260" r="3"/>
+            <circle cx="180" cy="80" r="2"/>
+            <circle cx="220" cy="100" r="2.5"/>
+            <circle cx="160" cy="180" r="2"/>
+            <circle cx="240" cy="200" r="2.5"/>
+          </g>
+
+          <!-- Eyes -->
+          <ellipse cx="155" cy="200" rx="14" ry="7" fill="#15131E"/>
+          <ellipse cx="245" cy="200" rx="14" ry="7" fill="#15131E"/>
+          <!-- Nose -->
+          <path d="M200 220 L190 280 L200 290 L210 280 Z" fill="none" stroke="#B6636B" stroke-width="1" opacity="0.6"/>
+          <!-- Mouth -->
+          <path d="M170 320 Q200 335 230 320" fill="none" stroke="#B6636B" stroke-width="2"/>
+        </svg>
+        <div class="aging-overlay" id="agingOverlay"></div>
+      </div>
+
+      <div class="aging-info">
+        <ul class="aging-info-list" id="agingInfoList">
+          <li class="aging-info-item active" data-key="colageno" style="--w:100%">
+            <div>
+              <div class="aii-label">Produção de colágeno</div>
+              <div class="aii-bar"></div>
+            </div>
+          </li>
+          <li class="aging-info-item" data-key="elastina" style="--w:100%">
+            <div>
+              <div class="aii-label">Elasticidade da elastina</div>
+              <div class="aii-bar"></div>
+            </div>
+          </li>
+          <li class="aging-info-item" data-key="hidratacao" style="--w:100%">
+            <div>
+              <div class="aii-label">Hidratação cutânea</div>
+              <div class="aii-bar"></div>
+            </div>
+          </li>
+          <li class="aging-info-item" data-key="espessura" style="--w:100%">
+            <div>
+              <div class="aii-label">Espessura da pele</div>
+              <div class="aii-bar"></div>
+            </div>
+          </li>
+          <li class="aging-info-item" data-key="manchas" style="--w:0%">
+            <div>
+              <div class="aii-label">Manchas e hiperpigmentação</div>
+              <div class="aii-bar"></div>
+            </div>
+          </li>
+          <li class="aging-info-item" data-key="linhas" style="--w:0%">
+            <div>
+              <div class="aii-label">Linhas de expressão</div>
+              <div class="aii-bar"></div>
+            </div>
+          </li>
+        </ul>
+
+        <div class="slider-wrap">
+          <div class="slider-label">
+            <span>Idade</span>
+            <span class="current"><span id="agingAgeSmall">25</span> anos</span>
+          </div>
+          <input type="range" min="20" max="70" value="25" class="slider" id="agingSlider">
+          <div class="slider-ticks">
+            <span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span>70</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PROCEDURES ============== -->
+<section class="procedures" id="procedures">
+  <div class="container">
+    <div class="proc-header">
+      <div class="eyebrow fade-in" style="color:var(--blue)">Ciência aplicada</div>
+      <h2 class="proc-title fade-in">Os <em>procedimentos</em> sob a lente da ciência.</h2>
+    </div>
+
+    <div class="proc-tabs" id="procTabs">
+      <button class="proc-tab active" data-proc="limpeza"><span class="num">01</span> Limpeza de pele</button>
+      <button class="proc-tab" data-proc="peeling"><span class="num">02</span> Peeling</button>
+      <button class="proc-tab" data-proc="microagulhamento"><span class="num">03</span> Microagulhamento</button>
+      <button class="proc-tab" data-proc="hidratacao"><span class="num">04</span> Hidratação facial</button>
+    </div>
+
+    <div class="proc-panel" id="procPanel">
+      <!-- filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============== INGREDIENTS ============== -->
+<section class="ingredients" id="ingredients">
+  <div class="container">
+    <div class="ing-header">
+      <div class="eyebrow fade-in" style="color:var(--yellow)">Descubra o ingrediente</div>
+      <h2 class="ing-title fade-in">O que está <em>no frasco</em> também é ciência.</h2>
+    </div>
+
+    <div class="ing-stage">
+      <ul class="ing-list" id="ingList">
+        <li class="ing-item active" data-ing="vitaminaC">
+          <span class="ing-item-name">Vitamina C</span>
+          <span class="ing-item-sym">C</span>
+        </li>
+        <li class="ing-item" data-ing="hialuronico">
+          <span class="ing-item-name">Ácido Hialurônico</span>
+          <span class="ing-item-sym">HA</span>
+        </li>
+        <li class="ing-item" data-ing="niacinamida">
+          <span class="ing-item-name">Niacinamida</span>
+          <span class="ing-item-sym">B3</span>
+        </li>
+        <li class="ing-item" data-ing="retinoides">
+          <span class="ing-item-name">Retinoides</span>
+          <span class="ing-item-sym">Vit. A</span>
+        </li>
+        <li class="ing-item" data-ing="salicilico">
+          <span class="ing-item-name">Ácido Salicílico</span>
+          <span class="ing-item-sym">BHA</span>
+        </li>
+      </ul>
+
+      <div class="ing-detail" id="ingDetail">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ROUTINE BUILDER ============== -->
+<section class="routine" id="routine">
+  <div class="container">
+    <div class="rt-header">
+      <div class="eyebrow fade-in">Monte sua rotina</div>
+      <h2 class="rt-title fade-in">Cuidados com <em>ordem, propósito</em> e ciência.</h2>
+    </div>
+
+    <div class="rt-board">
+      <div class="rt-col" data-period="morning">
+        <div class="rt-col-head">
+          <div class="rt-col-name">Manhã <em>.</em></div>
+          <div class="rt-col-time">04 passos</div>
+        </div>
+        <div class="rt-slots" data-period="morning">
+          <div class="rt-slot" data-pos="0"><span class="slot-num">01</span><span class="slot-text">Arraste um passo</span></div>
+          <div class="rt-slot" data-pos="1"><span class="slot-num">02</span><span class="slot-text">Arraste um passo</span></div>
+          <div class="rt-slot" data-pos="2"><span class="slot-num">03</span><span class="slot-text">Arraste um passo</span></div>
+          <div class="rt-slot" data-pos="3"><span class="slot-num">04</span><span class="slot-text">Arraste um passo</span></div>
+        </div>
+      </div>
+      <div class="rt-col" data-period="night">
+        <div class="rt-col-head">
+          <div class="rt-col-name">Noite <em>.</em></div>
+          <div class="rt-col-time">03 passos</div>
+        </div>
+        <div class="rt-slots" data-period="night">
+          <div class="rt-slot" data-pos="0"><span class="slot-num">01</span><span class="slot-text">Arraste um passo</span></div>
+          <div class="rt-slot" data-pos="1"><span class="slot-num">02</span><span class="slot-text">Arraste um passo</span></div>
+          <div class="rt-slot" data-pos="2"><span class="slot-num">03</span><span class="slot-text">Arraste um passo</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rt-pool">
+      <div class="rt-pool-title">Etapas disponíveis · arraste</div>
+      <div class="rt-pool-items" id="rtPool">
+        <div class="rt-piece" draggable="true" data-step="limpeza">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6m0 0L8 12m4-4l4 4M5 14h14M7 18h10M9 22h6"/></svg>
+          <div class="rt-piece-label">Limpeza</div>
+          <div class="rt-piece-sub">01</div>
+        </div>
+        <div class="rt-piece" draggable="true" data-step="tratamento">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8" stroke-dasharray="2 2"/></svg>
+          <div class="rt-piece-label">Tratamento</div>
+          <div class="rt-piece-sub">02</div>
+        </div>
+        <div class="rt-piece" draggable="true" data-step="hidratacao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6 10 6 16 12 22 18 16 18 10 12 2z"/></svg>
+          <div class="rt-piece-label">Hidratação</div>
+          <div class="rt-piece-sub">03</div>
+        </div>
+        <div class="rt-piece" draggable="true" data-step="protetor">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>
+          <div class="rt-piece-label">Protetor Solar</div>
+          <div class="rt-piece-sub">04</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rt-feedback" id="rtFeedback"></div>
+  </div>
+</section>
+
+<!-- ============== QUESTIONNAIRE ============== -->
+<section class="quiz" id="quiz">
+  <div class="container">
+    <div class="qz-header">
+      <div class="eyebrow fade-in">Descubra seu perfil</div>
+      <h2 class="qz-title fade-in">Como você <em>cuida</em> da sua pele?</h2>
+    </div>
+
+    <div class="qz-stage">
+      <aside class="qz-side">
+        <div class="qz-progress-wrap">
+          <div class="qz-progress-label">Progresso <span class="current" id="qzProgressText">1 / 8</span></div>
+          <div class="qz-progress" id="qzProgress" style="--p:12%"></div>
+        </div>
+        <div class="qz-numbers" id="qzNumbers">
+          <div class="qz-num active">1</div><div class="qz-num">2</div><div class="qz-num">3</div><div class="qz-num">4</div>
+          <div class="qz-num">5</div><div class="qz-num">6</div><div class="qz-num">7</div><div class="qz-num">8</div>
+        </div>
+        <div class="qz-side-info">
+          <strong>Sobre o resultado:</strong> este questionário é educativo. Não constitui diagnóstico dermatológico ou prescrição de qualquer tipo. Para questões específicas, consulte um profissional habilitado.
+        </div>
+      </aside>
+
+      <div class="qz-card" id="qzCard">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== MYTH/TRUTH ============== -->
+<section class="myth" id="myth">
+  <div class="container">
+    <div class="my-header">
+      <div class="eyebrow fade-in" style="color:var(--rose-soft)">Jogo interativo</div>
+      <h2 class="my-title fade-in">Mito <em>ou</em> verdade?</h2>
+    </div>
+
+    <div class="my-stage">
+      <div class="my-card" id="myCard">
+        <!-- filled by JS -->
+      </div>
+      <aside class="my-side">
+        <div class="my-side-title">Placar</div>
+        <div class="my-score-display">
+          <div class="my-score-big"><span id="myScore">0</span><span class="of">/5</span></div>
+          <div class="my-score-label">Acertos</div>
+        </div>
+        <div class="my-progress" id="myProgress">
+          <div class="my-progress-item"></div>
+          <div class="my-progress-item"></div>
+          <div class="my-progress-item"></div>
+          <div class="my-progress-item"></div>
+          <div class="my-progress-item"></div>
+        </div>
+        <button class="qz-btn ghost" id="myRestart" style="margin-top:24px;width:100%;border-color:rgba(245,239,227,0.3);color:var(--rose-soft)">Reiniciar</button>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============== DID YOU KNOW ============== -->
+<section class="know" id="know">
+  <div class="container">
+    <div class="kn-header">
+      <div class="eyebrow fade-in">Você sabia?</div>
+      <h2 class="kn-title fade-in">Fatos que <em>revelam</em> a pele.</h2>
+    </div>
+
+    <div class="kn-grid">
+      <article class="kn-card fade-in">
+        <div class="kn-num">F · 01</div>
+        <div>
+          <p class="kn-text">A pele é o <em>maior órgão</em> do corpo humano, com cerca de 2 m² em um adulto.</p>
+        </div>
+        <div class="kn-tag">Anatomia</div>
+      </article>
+      <article class="kn-card fade-in">
+        <div class="kn-num">F · 02</div>
+        <div>
+          <p class="kn-text">A face possui uma complexa rede de <em>músculos</em> responsáveis por expressões e movimentos sutis.</p>
+        </div>
+        <div class="kn-tag">Músculos</div>
+      </article>
+      <article class="kn-card fade-in">
+        <div class="kn-num">F · 03</div>
+        <div>
+          <p class="kn-text">A exposição à radiação ultravioleta está diretamente ligada ao <em>fotoenvelhecimento</em>.</p>
+        </div>
+        <div class="kn-tag">Proteção</div>
+      </article>
+      <article class="kn-card fade-in">
+        <div class="kn-num">F · 04</div>
+        <div>
+          <p class="kn-text">A epiderme se renova, em média, a cada <em>28 dias</em> — um ciclo que se altera com a idade.</p>
+        </div>
+        <div class="kn-tag">Renovação</div>
+      </article>
+      <article class="kn-card fade-in">
+        <div class="kn-num">F · 05</div>
+        <div>
+          <p class="kn-text">O colágeno representa cerca de <em>30% das proteínas</em> do corpo humano e está concentrado na derme.</p>
+        </div>
+        <div class="kn-tag">Proteínas</div>
+      </article>
+      <article class="kn-card fade-in">
+        <div class="kn-num">F · 06</div>
+        <div>
+          <p class="kn-text">O protetor solar é a <em>medida mais eficaz</em> na prevenção do envelhecimento precoce da pele.</p>
+        </div>
+        <div class="kn-tag">Prevenção</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CHALLENGE ============== -->
+<section class="challenge" id="challenge">
+  <div class="container">
+    <div class="ch-header">
+      <div class="eyebrow fade-in" style="color:var(--yellow)">O grande encerramento</div>
+      <h2 class="ch-title fade-in">Desafio da <em>estética facial.</em></h2>
+    </div>
+
+    <div class="ch-stage">
+      <div class="ch-card" id="chCard">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer class="footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">Estética Facial <em>·</em> Ciência e Cuidado</div>
+        <p class="foot-text">Uma experiência interativa para investigar a pele, sua anatomia e a ciência por trás dos cuidados e procedimentos estéticos faciais.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Navegar</h4>
+        <ul>
+          <li><a href="#about">Sobre o projeto</a></li>
+          <li><a href="#explore">Explore o rosto</a></li>
+          <li><a href="#anatomy">Anatomia da pele</a></li>
+          <li><a href="#aging">Envelhecimento</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Experiências</h4>
+        <ul>
+          <li><a href="#ingredients">Ingredientes</a></li>
+          <li><a href="#routine">Monte sua rotina</a></li>
+          <li><a href="#quiz">Questionário</a></li>
+          <li><a href="#myth">Mitos ou verdades</a></li>
+          <li><a href="#challenge">Desafio final</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>Projeto de Feira de Ciências · 2025</span>
+      <span>Conteúdo educativo · sem fins diagnósticos</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   ESTÉTICA FACIAL — INTERACTIVE LAYER
+   ============================================================ */
+
+/* ---------- Utilities ---------- */
+const $ = (s, p = document) => p.querySelector(s);
+const $$ = (s, p = document) => Array.from(p.querySelectorAll(s));
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Scroll progress ---------- */
+const progress = $('#scrollProgress');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  progress.style.width = (window.scrollY / h * 100) + '%';
+}, { passive: true });
+
+/* ---------- Nav scroll state ---------- */
+const nav = $('#nav');
+const sideRail = $('#sideRail');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+/* ---------- Mobile nav ---------- */
+const navToggle = $('#navToggle');
+const navMenu = $('#navMenu');
+navToggle.addEventListener('click', () => {
+  navToggle.classList.toggle('open');
+  navMenu.classList.toggle('open');
+});
+$$('.nav-menu a').forEach(a => a.addEventListener('click', () => {
+  navToggle.classList.remove('open');
+  navMenu.classList.remove('open');
+}));
+
+/* ---------- Side rail active state ---------- */
+const sections = ['hero','about','explore','anatomy','aging','procedures','ingredients','routine','quiz','myth','challenge'];
+const railItems = $$('.side-rail-item');
+railItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const t = document.getElementById(item.dataset.target);
+    if (t) t.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' });
+  });
+});
+const obsRail = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      railItems.forEach(r => r.classList.toggle('active', r.dataset.target === id));
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) obsRail.observe(el);
+});
+
+/* ---------- Fade in ---------- */
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+$$('.fade-in').forEach(el => fadeObs.observe(el));
+
+/* ---------- Particles ---------- */
+const particlesEl = $('#particles');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.top = (50 + Math.random() * 50) + '%';
+  p.style.animationDelay = (Math.random() * 8) + 's';
+  p.style.animationDuration = (6 + Math.random() * 6) + 's';
+  p.style.background = Math.random() > 0.6 ? '#E8C547' : '#F2D6D9';
+  particlesEl.appendChild(p);
+}
+
+/* ---------- Hero face reveal + parallax ---------- */
+const heroFace = $('#heroFace');
+setTimeout(() => heroFace.classList.add('revealed'), 500);
+
+const heroAnatomy = $('.face-anatomy');
+if (heroAnatomy) {
+  let heroT = 0;
+  const tickHero = () => {
+    heroT += 0.01;
+    heroAnatomy.style.opacity = (0.5 + Math.sin(heroT) * 0.15);
+  };
+  setInterval(tickHero, 50);
+}
+
+const heroSection = $('.hero');
+heroSection.addEventListener('mousemove', (e) => {
+  if (reducedMotion) return;
+  const r = heroSection.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width - 0.5;
+  const y = (e.clientY - r.top) / r.height - 0.5;
+  heroFace.style.transform = `translate(calc(-50% + ${x * 20}px), calc(-50% + ${y * 20}px)) translateY(-50%)`;
+  $('.hero-bg').style.transform = `translate(${x * -10}px, ${y * -10}px)`;
+});
+
+/* ============================================================
+   FACE EXPLORER
+   ============================================================ */
+const faceInfo = {
+  epiderme: {
+    num: '01 / 08',
+    title: 'Epiderme',
+    code: 'FIG. 02',
+    text: 'É a camada mais externa da pele e funciona como uma barreira de proteção contra agentes externos, além de participar da regulação da perda de água e da pigmentação.'
+  },
+  derme: {
+    num: '02 / 08',
+    title: 'Derme',
+    code: 'FIG. 03',
+    text: 'Camada onde estão localizadas estruturas como vasos sanguíneos, fibras de colágeno e elastina, folículos pilosos e terminações nervosas. É onde a pele ganha sustentação e elasticidade.'
+  },
+  hipoderme: {
+    num: '03 / 08',
+    title: 'Hipoderme',
+    code: 'FIG. 04',
+    text: 'Contém tecido adiposo e contribui para proteção mecânica, isolamento térmico e reserva energética. Sua espessura varia conforme a região do corpo.'
+  },
+  musculos: {
+    num: '04 / 08',
+    title: 'Músculos faciais',
+    code: 'FIG. 05',
+    text: 'A face possui uma complexa rede de músculos responsáveis por expressões, mastigação e movimentos sutis. Eles se inserem diretamente na pele em algumas regiões.'
+  },
+  vasos: {
+    num: '05 / 08',
+    title: 'Vasos sanguíneos',
+    code: 'FIG. 06',
+    text: 'A derme é intensamente vascularizada. Esses vasos nutrem as camadas da pele, regulam a temperatura corporal e participam dos processos de reparação.'
+  },
+  nervos: {
+    num: '06 / 08',
+    title: 'Nervos',
+    code: 'FIG. 07',
+    text: 'Terminações nervosas conferem à pele sua sensibilidade: tato, pressão, dor e temperatura. Na face, a inervação é particularmente rica e complexa.'
+  },
+  glandulas: {
+    num: '07 / 08',
+    title: 'Glândulas',
+    code: 'FIG. 08',
+    text: 'Glândulas sebáceas e sudoríparas estão presentes na derme, participando da produção de sebo, suor e da manutenção do manto hidrolipídico da pele.'
+  },
+  colageno: {
+    num: '08 / 08',
+    title: 'Fibras de colágeno',
+    code: 'FIG. 09',
+    text: 'O colágeno é a proteína mais abundante da derme e confere resistência e estrutura à pele. Com o tempo, sua produção diminui e as fibras se organizam de forma menos eficiente.'
+  }
+};
+
+function setFaceInfo(key) {
+  const data = faceInfo[key];
+  if (!data) return;
+  $('#faceInfoNum').textContent = data.num;
+  $('#faceInfoTitle').innerHTML = data.title === 'Epiderme' || data.title === 'Derme' || data.title === 'Hipoderme' || data.title === 'Músculos faciais' || data.title === 'Vasos sanguíneos' || data.title === 'Nervos' || data.title === 'Glândulas' ? `${data.title}` : data.title;
+  $('#faceInfoText').textContent = data.text;
+  $('#faceInfoCode').textContent = data.code;
+}
+
+// Click hotspots
+$$('.face-svg .hotspot').forEach(h => {
+  h.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const info = h.dataset.info;
+    setFaceInfo(info);
+    h.style.opacity = '0.9';
+    setTimeout(() => h.style.opacity = '', 300);
+  });
+});
+
+// Layer controls
+$$('.face-control').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $$('.face-control').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const layer = btn.dataset.layer;
+    $$('.face-svg .layer').forEach(l => {
+      l.style.display = 'none';
+    });
+    if (layer === 'all') {
+      // show all but layered
+      const epi = $('.face-svg [data-name="epiderme"]');
+      const der = $('.face-svg [data-name="derme"]');
+      const hip = $('.face-svg [data-name="hipoderme"]');
+      epi.style.display = 'block'; epi.style.opacity = '0.9';
+      der.style.display = 'block'; der.style.opacity = '0.5';
+      hip.style.display = 'block'; hip.style.opacity = '0.3';
+      $('.face-svg .muscles').style.display = 'none';
+      setFaceInfo('epiderme');
+    } else {
+      const target = $(`.face-svg [data-name="${layer}"]`);
+      if (target) {
+        target.style.display = 'block';
+        target.style.opacity = '1';
+      }
+      setFaceInfo(layer);
+    }
+  });
+});
+
+/* ============================================================
+   ANATOMY LAYERS — scroll-driven peel
+   ============================================================ */
+const layersStack = $('#layersStack');
+const layerCards = $$('.layer-card');
+const layersSection = $('.layers');
+
+function updateLayers() {
+  if (!layersStack) return;
+  const rect = layersSection.getBoundingClientRect();
+  const vh = window.innerHeight;
+  const total = layersSection.offsetHeight - vh;
+  const progress = Math.max(0, Math.min(1, -rect.top / total));
+
+  // Distribute 4 cards across 0..1
+  layerCards.forEach((card, i) => {
+    const layer = parseInt(card.dataset.layer);
+    // Card order: 3 (deepest) first visible, then 2, 1, 0
+    // progress 0 -> all stacked, 1 -> all spread
+    const order = [3, 2, 1, 0];
+    const idx = order.indexOf(layer);
+    // spacing
+    const spread = 80;
+    const yOffset = idx * spread - progress * (3 * spread);
+    const scale = 1 - idx * 0.04;
+    const opacity = 1 - Math.max(0, progress - idx * 0.25) * 1.5;
+    card.style.transform = `translateY(${yOffset}px) scale(${scale})`;
+    card.style.opacity = Math.max(0.15, opacity);
+  });
+}
+window.addEventListener('scroll', updateLayers, { passive: true });
+updateLayers();
+
+/* ============================================================
+   AGING SLIDER
+   ============================================================ */
+const agingSlider = $('#agingSlider');
+const agingFaceEl = $('#agingFace');
+const agingSvg = $('#agingSvg');
+const agingWrinkles = $('#agingWrinkles');
+const agingSpots = $('#agingSpots');
+const agingFaceShape = $('#agingFaceShape');
+const agingInfoList = $$('.aging-info-item');
+const agingAgeSmall = $('#agingAgeSmall');
+const agingAge = $('#agingAge');
+
+function setAge(age) {
+  agingAge.textContent = age;
+  agingAgeSmall.textContent = age;
+  const t = (age - 20) / 50; // 0..1
+
+  // Skin tone darkens and desaturates
+  const skinLightness = 95 - t * 18;
+  const skinSat = 30 - t * 12;
+  const skinHue = 350 - t * 8;
+  agingFaceShape.setAttribute('fill', `hsl(${skinHue}, ${skinSat}%, ${skinLightness}%)`);
+
+  // Wrinkles appear
+  agingWrinkles.setAttribute('opacity', t * 0.7);
+  // Spots appear
+  agingSpots.setAttribute('opacity', t * 0.8);
+
+  // Info list bars
+  const items = agingInfoList;
+  // colageno, elastina, hidratacao, espessura decrease
+  // manchas, linhas increase
+  items[0].style.setProperty('--w', (100 - t * 65) + '%'); // colageno
+  items[1].style.setProperty('--w', (100 - t * 70) + '%'); // elastina
+  items[2].style.setProperty('--w', (100 - t * 50) + '%'); // hidratacao
+  items[3].style.setProperty('--w', (100 - t * 35) + '%'); // espessura
+  items[4].style.setProperty('--w', (t * 85) + '%');       // manchas
+  items[5].style.setProperty('--w', (t * 95) + '%');       // linhas
+}
+
+agingSlider.addEventListener('input', (e) => setAge(parseInt(e.target.value)));
+setAge(25);
+
+/* ============================================================
+   PROCEDURES
+   ============================================================ */
+const procedures = {
+  limpeza: {
+    name: 'Limpeza de pele',
+    mechanism: 'Procedimento voltado para a higienização profunda da pele, com remoção de impurezas, células descamadas e excesso de sebo. A técnica é adaptada ao tipo e às condições cutâneas de cada pessoa.',
+    steps: [
+      'Higienização inicial com produtos adequados ao tipo de pele.',
+      'Aplicação de substância para amolecer o conteúdo de poros.',
+      'Extração cuidadosa de cravos e remoção de impurezas.',
+      'Aplicação de máscara calmante ou hidratante conforme indicação.',
+      'Finalização com protetor solar.'
+    ],
+    svg: `<svg viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="80" fill="#F2D6D9" opacity="0.3"/>
+      <g stroke="#B6636B" stroke-width="1" fill="none">
+        <circle cx="100" cy="100" r="60" stroke-dasharray="3 6"/>
+        <circle cx="100" cy="100" r="40"/>
+        <circle cx="100" cy="100" r="20"/>
+      </g>
+      <g fill="#3A4A6B">
+        <circle cx="60" cy="60" r="3"/><circle cx="140" cy="60" r="3"/>
+        <circle cx="100" cy="100" r="2"/><circle cx="60" cy="140" r="3"/>
+        <circle cx="140" cy="140" r="3"/><circle cx="100" cy="40" r="2"/>
+      </g>
+      <text x="100" y="180" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#F5EFE3" opacity="0.6" letter-spacing="0.2em">HIGIENIZAÇÃO</text>
+    </svg>`
+  },
+  peeling: {
+    name: 'Peeling',
+    mechanism: 'Procedimento que promove a renovação controlada das camadas superficiais da pele por meio da aplicação de agentes químicos ou físicos. A profundidade varia conforme o tipo utilizado e a indicação profissional.',
+    steps: [
+      'Avaliação do tipo de pele e definição do peeling adequado.',
+      'Preparação da pele com higienização e, em alguns casos, pré-tratamento.',
+      'Aplicação do agente ativo na concentração e tempo determinados.',
+      'Remoção ou neutralização conforme protocolo.',
+      'Cuidados pós-procedimento, incluindo fotoproteção rigorosa.'
+    ],
+    svg: `<svg viewBox="0 0 200 200">
+      <defs><linearGradient id="peelG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F2D6D9"/><stop offset="100%" stop-color="#D88A92"/></linearGradient></defs>
+      <ellipse cx="100" cy="100" rx="70" ry="90" fill="url(#peelG)"/>
+      <g fill="#E8B4B8" opacity="0.5">
+        <ellipse cx="80" cy="70" rx="8" ry="3"/><ellipse cx="120" cy="80" rx="6" ry="2"/>
+        <ellipse cx="90" cy="120" rx="7" ry="3"/><ellipse cx="110" cy="140" rx="5" ry="2"/>
+        <ellipse cx="100" cy="100" rx="4" ry="2"/>
+      </g>
+      <g stroke="#3A4A6B" stroke-width="0.5" fill="none" opacity="0.6">
+        <path d="M60 60 Q100 50 140 60"/><path d="M55 100 Q100 90 145 100"/><path d="M60 140 Q100 130 140 140"/>
+      </g>
+    </svg>`
+  },
+  microagulhamento: {
+    name: 'Microagulhamento',
+    mechanism: 'Procedimento que utiliza pequenas agulhas para realizar perfurações controladas na pele. Esse processo pode estimular mecanismos naturais de reparação e produção de colágeno, conforme indicação.',
+    steps: [
+      'Avaliação clínica e definição dos parâmetros do equipamento.',
+      'Assepsia rigorosa da área a ser tratada.',
+      'Aplicação do dispositivo com agulhas em profundidades controladas.',
+      'Possível aplicação de ativos durante ou após o procedimento.',
+      'Cuidados pós-procedimento, incluindo reparadores e fotoproteção.'
+    ],
+    svg: `<svg viewBox="0 0 200 200">
+      <defs><radialGradient id="microG"><stop offset="0%" stop-color="#3A4A6B"/><stop offset="100%" stop-color="#1F2A44"/></radialGradient></defs>
+      <ellipse cx="100" cy="100" rx="70" ry="90" fill="#F2D6D9"/>
+      <g stroke="url(#microG)" stroke-width="0.6">
+        <line x1="60" y1="60" x2="60" y2="65"/><line x1="70" y1="55" x2="70" y2="60"/><line x1="80" y1="50" x2="80" y2="55"/>
+        <line x1="90" y1="55" x2="90" y2="60"/><line x1="100" y1="50" x2="100" y2="55"/>
+        <line x1="110" y1="55" x2="110" y2="60"/><line x1="120" y1="50" x2="120" y2="55"/><line x1="130" y1="55" x2="130" y2="60"/>
+        <line x1="140" y1="60" x2="140" y2="65"/>
+        <line x1="55" y1="80" x2="55" y2="85"/><line x1="70" y1="75" x2="70" y2="80"/><line x1="90" y1="78" x2="90" y2="83"/>
+        <line x1="110" y1="78" x2="110" y2="83"/><line x1="130" y1="75" x2="130" y2="80"/><line x1="145" y1="80" x2="145" y2="85"/>
+        <line x1="60" y1="100" x2="60" y2="105"/><line x1="80" y1="100" x2="80" y2="105"/><line x1="100" y1="100" x2="100" y2="105"/>
+        <line x1="120" y1="100" x2="120" y2="105"/><line x1="140" y1="100" x2="140" y2="105"/>
+        <line x1="70" y1="125" x2="70" y2="130"/><line x1="90" y1="125" x2="90" y2="130"/><line x1="110" y1="125" x2="110" y2="130"/>
+        <line x1="130" y1="125" x2="130" y2="130"/>
+        <line x1="80" y1="150" x2="80" y2="155"/><line x1="100" y1="150" x2="100" y2="155"/><line x1="120" y1="150" x2="120" y2="155"/>
+      </g>
+    </svg>`
+  },
+  hidratacao: {
+    name: 'Hidratação facial',
+    mechanism: 'Cuidados voltados para melhorar a hidratação e a função de barreira da pele. Pode incluir o uso de produtos tópicos ou procedimentos que auxiliam na reposição de água e de substâncias higroscópicas.',
+    steps: [
+      'Avaliação do nível de hidratação e do tipo de pele.',
+      'Higienização suave para preparar a pele.',
+      'Aplicação de ativos hidratantes, como ácido hialurônico.',
+      'Oclusão leve com cremes ou máscaras para potencializar.',
+      'Manutenção diária com produtos adequados em casa.'
+    ],
+    svg: `<svg viewBox="0 0 200 200">
+      <defs>
+        <linearGradient id="hidrG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8D2D4"/><stop offset="100%" stop-color="#D88A92"/></linearGradient>
+        <radialGradient id="dropG"><stop offset="0%" stop-color="#F5EFE3" stop-opacity="0.9"/><stop offset="100%" stop-color="#F5EFE3" stop-opacity="0"/></radialGradient>
+      </defs>
+      <ellipse cx="100" cy="100" rx="70" ry="90" fill="url(#hidrG)"/>
+      <g fill="url(#dropG)">
+        <path d="M100 50 C 90 65, 90 75, 100 80 C 110 75, 110 65, 100 50 Z"/>
+        <path d="M70 100 C 62 112, 62 120, 70 124 C 78 120, 78 112, 70 100 Z"/>
+        <path d="M130 110 C 122 122, 122 130, 130 134 C 138 130, 138 122, 130 110 Z"/>
+        <path d="M100 130 C 92 142, 92 150, 100 154 C 108 150, 108 142, 100 130 Z"/>
+        <path d="M80 160 C 75 168, 75 173, 80 176 C 85 173, 85 168, 80 160 Z"/>
+        <path d="M120 165 C 115 173, 115 178, 120 181 C 125 178, 125 173, 120 165 Z"/>
+      </g>
+    </svg>`
+  }
+};
+
+const procPanel = $('#procPanel');
+function renderProc(key) {
+  const p = procedures[key];
+  procPanel.innerHTML = `
+    <div class="proc-visual">${p.svg}</div>
+    <div class="proc-content">
+      <div class="eyebrow">Procedimento · ${key}</div>
+      <h3 class="proc-name">${p.name.replace(/^./, c => c)}<em>.</em></h3>
+      <p class="proc-mechanism">${p.mechanism}</p>
+      <ol class="proc-steps">
+        ${p.steps.map((s, i) => `<li class="proc-step"><div class="proc-step-num">0${i+1}</div><div class="proc-step-text">${s}</div></li>`).join('')}
+      </ol>
+      <div class="proc-warning">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2 L18 17 L2 17 Z"/><line x1="10" y1="8" x2="10" y2="12"/><circle cx="10" cy="14.5" r="0.5" fill="currentColor"/></svg>
+        <div><strong>Atenção.</strong> Procedimentos estéticos devem ser realizados por profissionais habilitados e de acordo com as indicações e contraindicações de cada pessoa.</div>
+      </div>
+    </div>
+  `;
+}
+$$('.proc-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    $$('.proc-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderProc(tab.dataset.proc);
+  });
+});
+renderProc('limpeza');
+
+/* ============================================================
+   INGREDIENTS
+   ============================================================ */
+const ingredients = {
+  vitaminaC: {
+    name: 'Vitamina C',
+    sym: 'C',
+    svg: `<svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="30" fill="none" stroke="#E8C547" stroke-width="1"/><text x="40" y="48" text-anchor="middle" font-family="Fraunces" font-size="28" font-style="italic" fill="#E8C547">C</text></svg>`,
+    question: 'Para que é comumente utilizada em cosméticos?',
+    options: [
+      'Auxílio na uniformização da aparência da pele e ação antioxidante',
+      'Hidratação exclusivamente',
+      'Esfoliação mecânica',
+      'Anestesia local'
+    ],
+    correct: 0,
+    explain: 'A <strong>vitamina C</strong> é um antioxidante amplamente utilizado em formulações cosméticas, podendo auxiliar na uniformização do tom da pele e na proteção contra radicais livres. Sua estabilidade depende de formulação adequada.'
+  },
+  hialuronico: {
+    name: 'Ácido Hialurônico',
+    sym: 'HA',
+    svg: `<svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="30" fill="none" stroke="#E8C547" stroke-width="1"/><text x="40" y="48" text-anchor="middle" font-family="Fraunces" font-size="22" font-style="italic" fill="#E8C547">HA</text></svg>`,
+    question: 'A principal característica do ácido hialurônico na pele é:',
+    options: [
+      'Esfoliar a camada córnea',
+      'Capacidade de retenção de água',
+      'Promover descamação química',
+      'Atuar como filtro solar físico'
+    ],
+    correct: 1,
+    explain: 'O <strong>ácido hialurônico</strong> é uma substância higroscópica — capaz de reter grandes quantidades de água. É componente natural da pele e amplamente utilizado em hidratantes e preenchedores.'
+  },
+  niacinamida: {
+    name: 'Niacinamida',
+    sym: 'B3',
+    svg: `<svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="30" fill="none" stroke="#E8C547" stroke-width="1"/><text x="40" y="48" text-anchor="middle" font-family="Fraunces" font-size="22" font-style="italic" fill="#E8C547">B₃</text></svg>`,
+    question: 'A niacinamida é uma forma da vitamina:',
+    options: [
+      'Vitamina A',
+      'Vitamina C',
+      'Vitamina B3',
+      'Vitamina D'
+    ],
+    correct: 2,
+    explain: 'A <strong>niacinamida</strong> é uma forma da vitamina B3. É utilizada em cosméticos por potenciais benefícios como auxílio na função de barreira da pele e na redução da aparência de poros.'
+  },
+  retinoides: {
+    name: 'Retinoides',
+    sym: 'A',
+    svg: `<svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="30" fill="none" stroke="#E8C547" stroke-width="1"/><text x="40" y="48" text-anchor="middle" font-family="Fraunces" font-size="28" font-style="italic" fill="#E8C547">A</text></svg>`,
+    question: 'Os retinoides são derivados de qual vitamina?',
+    options: [
+      'Vitamina C',
+      'Vitamina E',
+      'Vitamina A',
+      'Vitamina K'
+    ],
+    correct: 2,
+    explain: 'Os <strong>retinoides</strong> são derivados da vitamina A. São utilizados em dermatologia e cosmética por sua ação sobre a renovação celular, mas exigem atenção a concentrações, indicações e cuidados com fotoproteção.'
+  },
+  salicilico: {
+    name: 'Ácido Salicílico',
+    sym: 'BHA',
+    svg: `<svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="30" fill="none" stroke="#E8C547" stroke-width="1"/><text x="40" y="48" text-anchor="middle" font-family="Fraunces" font-size="20" font-style="italic" fill="#E8C547">BHA</text></svg>`,
+    question: 'O ácido salicílico pertence a qual classe?',
+    options: [
+      'Hidroxiácido alfa (AHA)',
+      'Hidroxiácido beta (BHA)',
+      'Hidroxiácido gama',
+      'Polihidroxiácido'
+    ],
+    correct: 1,
+    explain: 'O <strong>ácido salicílico</strong> é um beta-hidroxiácido (BHA). É lipofílico, o que lhe permite atuar em ambientes com sebo, sendo comumente utilizado em formulações para peles oleosas e com tendência a cravos.'
+  }
+};
+
+const ingDetail = $('#ingDetail');
+let currentIngKey = 'vitaminaC';
+function renderIngredient(key) {
+  const ing = ingredients[key];
+  ingDetail.innerHTML = `
+    <div class="ing-detail-top">
+      <h3 class="ing-detail-name">${ing.name}.<em>?</em></h3>
+      <div class="ing-detail-svg">${ing.svg}</div>
+    </div>
+    <div class="ing-question">
+      <div class="ing-question-q">Pergunta</div>
+      <div class="ing-question-txt">${ing.question}</div>
+    </div>
+    <div class="ing-options" id="ingOptions">
+      ${ing.options.map((o, i) => `
+        <button class="ing-option" data-i="${i}">${o}</button>
+      `).join('')}
+    </div>
+    <div class="ing-explain" id="ingExplain">${ing.explain}<br><br><em>Importante:</em> diferentes ingredientes, concentrações e formulações podem ter diferentes usos, eficácia e riscos. Procure orientação profissional.</div>
+  `;
+
+  $$('.ing-option').forEach((opt, i) => {
+    opt.addEventListener('click', () => {
+      const isCorrect = i === ing.correct;
+      $$('.ing-option').forEach((o, j) => {
+        o.disabled = true;
+        if (j === ing.correct) o.classList.add('correct');
+        if (j === i && !isCorrect) o.classList.add('wrong');
+      });
+      setTimeout(() => {
+        $('#ingExplain').classList.add('show');
+      }, 400);
+    });
+  });
+}
+
+$$('.ing-item').forEach(item => {
+  item.addEventListener('click', () => {
+    $$('.ing-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    currentIngKey = item.dataset.ing;
+    renderIngredient(currentIngKey);
+  });
+});
+renderIngredient('vitaminaC');
+
+/* ============================================================
+   ROUTINE BUILDER (drag and drop)
+   ============================================================ */
+const correctRoutines = {
+  morning: ['limpeza', 'tratamento', 'hidratacao', 'protetor'],
+  night: ['limpeza', 'tratamento', 'hidratacao']
+};
+
+let routineState = {
+  morning: [null, null, null, null],
+  night: [null, null, null]
+};
+
+const stepLabels = {
+  limpeza: 'Limpeza',
+  tratamento: 'Tratamento',
+  hidratacao: 'Hidratação',
+  protetor: 'Protetor Solar'
+};
+
+let draggedStep = null;
+
+$$('.rt-piece').forEach(piece => {
+  piece.addEventListener('dragstart', (e) => {
+    if (piece.classList.contains('used')) {
+      e.preventDefault();
+      return;
+    }
+    draggedStep = piece.dataset.step;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', draggedStep);
+  });
+});
+
+$$('.rt-slot').forEach(slot => {
+  slot.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    slot.classList.add('drag-over');
+  });
+  slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+  slot.addEventListener('drop', (e) => {
+    e.preventDefault();
+    slot.classList.remove('drag-over');
+    const period = slot.parentElement.dataset.period;
+    const pos = parseInt(slot.dataset.pos);
+    const step = e.dataTransfer.getData('text/plain');
+
+    // Remove previous instance of this step in any column
+    if (routineState.morning.includes(step)) {
+      const idx = routineState.morning.indexOf(step);
+      routineState.morning[idx] = null;
+    }
+    if (routineState.night.includes(step)) {
+      const idx = routineState.night.indexOf(step);
+      routineState.night[idx] = null;
+    }
+
+    // Place new
+    routineState[period][pos] = step;
+
+    renderRoutine();
+    // Mark piece as used (if it's already in some slot)
+    updatePoolState();
+  });
+});
+
+function renderRoutine() {
+  ['morning', 'night'].forEach(period => {
+    const slots = $$(`.rt-slots[data-period="${period}"] .rt-slot`);
+    routineState[period].forEach((step, i) => {
+      const slot = slots[i];
+      if (step) {
+        slot.classList.add('filled');
+        slot.innerHTML = `
+          <span class="slot-num">0${i+1}</span>
+          <span class="slot-text">${stepLabels[step]}</span>
+          <span class="slot-remove" data-period="${period}" data-pos="${i}">remover</span>
+        `;
+      } else {
+        slot.classList.remove('filled');
+        slot.innerHTML = `<span class="slot-num">0${i+1}</span><span class="slot-text">Arraste um passo</span>`;
+      }
+    });
+  });
+
+  // Bind remove
+  $$('.slot-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = btn.dataset.period;
+      const i = parseInt(btn.dataset.pos);
+      routineState[p][i] = null;
+      renderRoutine();
+      updatePoolState();
+      $('#rtFeedback').classList.remove('show');
+    });
+  });
+
+  checkRoutine();
+}
+
+function updatePoolState() {
+  const used = new Set();
+  ['morning', 'night'].forEach(p => routineState[p].forEach(s => s && used.add(s)));
+  $$('.rt-piece').forEach(p => {
+    p.classList.toggle('used', used.has(p.dataset.step));
+  });
+}
+
+function checkRoutine() {
+  const fb = $('#rtFeedback');
+  const m = routineState.morning;
+  const n = routineState.night;
+
+  const mComplete = m.every(s => s !== null);
+  const nComplete = n.every(s => s !== null);
+
+  if (!mComplete || !nComplete) {
+    fb.classList.remove('show');
+    return;
+  }
+
+  const mCorrect = JSON.stringify(m) === JSON.stringify(correctRoutines.morning);
+  const nCorrect = JSON.stringify(n) === JSON.stringify(correctRoutines.night);
+
+  if (mCorrect && nCorrect) {
+    fb.className = 'rt-feedback show success';
+    fb.innerHTML = `<strong>Rotina completa.</strong> Você montou uma sequência lógica de cuidados: limpeza prepara a pele, tratamento age quando indicado, hidratação mantém a barreira e o protetor solar é indispensável pela manhã. A ordem importa — e a ciência explica por quê.`;
+  } else {
+    fb.className = 'rt-feedback show';
+    fb.innerHTML = `<strong>Quase lá.</strong> A ordem e a seleção dos passos fazem diferença. Lembre-se: o protetor solar é essencial pela manhã, e o tratamento pode variar conforme a indicação. Revise a sequência e tente novamente.`;
+  }
+}
+
+/* ============================================================
+   QUESTIONNAIRE
+   ============================================================ */
+const quizQuestions = [
+  {
+    q: 'Com que frequência você lava o rosto?',
+    options: ['1 vez ao dia', '2 vezes ao dia', 'Mais de 2 vezes', 'Quase nunca'],
+    weights: [1, 3, 1, 0]
+  },
+  {
+    q: 'Você utiliza protetor solar diariamente?',
+    options: ['Sim', 'Às vezes', 'Não'],
+    weights: [3, 1, 0]
+  },
+  {
+    q: 'Você costuma dormir com maquiagem?',
+    options: ['Nunca', 'Às vezes', 'Frequentemente'],
+    weights: [3, 1, 0]
+  },
+  {
+    q: 'Você costuma espremer espinhas?',
+    options: ['Nunca', 'Às vezes', 'Frequentemente'],
+    weights: [3, 1, 0]
+  },
+  {
+    q: 'Você conhece seu tipo de pele?',
+    options: ['Sim', 'Mais ou menos', 'Não'],
+    weights: [3, 1, 0]
+  },
+  {
+    q: 'Você utiliza produtos sem saber exatamente para que servem?',
+    options: ['Nunca', 'Às vezes', 'Frequentemente'],
+    weights: [3, 1, 0]
+  },
+  {
+    q: 'Você acha que quanto mais produto usar, melhor será o resultado?',
+    options: ['Sim', 'Não', 'Não sei'],
+    weights: [0, 3, 1]
+  },
+  {
+    q: 'Você lê a composição dos produtos que utiliza?',
+    options: ['Sempre', 'Às vezes', 'Nunca'],
+    weights: [3, 1, 0]
+  }
+];
+
+let qzIndex = 0;
+let qzAnswers = new Array(quizQuestions.length).fill(null);
+const qzCard = $('#qzCard');
+const qzProgress = $('#qzProgress');
+const qzProgressText = $('#qzProgressText');
+const qzNumbers = $$('.qz-num');
+
+function renderQuestion() {
+  const q = quizQuestions[qzIndex];
+  const done = qzAnswers.filter(a => a !== null).length;
+  qzProgress.style.setProperty('--p', ((qzIndex + 1) / quizQuestions.length * 100) + '%');
+  qzProgressText.textContent = `${qzIndex + 1} / ${quizQuestions.length}`;
+  qzNumbers.forEach((n, i) => {
+    n.classList.toggle('active', i === qzIndex);
+    n.classList.toggle('done', qzAnswers[i] !== null && i !== qzIndex);
+  });
+
+  qzCard.innerHTML = `
+    <div class="qz-q-num">Pergunta ${String(qzIndex + 1).padStart(2, '0')} · ${quizQuestions.length} no total</div>
+    <h3 class="qz-q-text">${q.q}</h3>
+    <div class="qz-options">
+      ${q.options.map((o, i) => `
+        <button class="qz-option ${qzAnswers[qzIndex] === i ? 'selected' : ''}" data-i="${i}">
+          <span class="opt-marker"></span>
+          <span>${o}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="qz-nav">
+      <button class="qz-btn ghost" id="qzPrev" ${qzIndex === 0 ? 'disabled' : ''}>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2 L4 6 L8 10"/></svg>
+        Anterior
+      </button>
+      <button class="qz-btn primary" id="qzNext" ${qzAnswers[qzIndex] === null ? 'disabled' : ''}>
+        ${qzIndex === quizQuestions.length - 1 ? 'Ver resultado' : 'Próxima'}
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2 L8 6 L4 10"/></svg>
+      </button>
+    </div>
+  `;
+
+  $$('.qz-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      qzAnswers[qzIndex] = parseInt(opt.dataset.i);
+      renderQuestion();
+    });
+  });
+
+  $('#qzPrev').addEventListener('click', () => {
+    if (qzIndex > 0) { qzIndex--; renderQuestion(); }
+  });
+  $('#qzNext').addEventListener('click', () => {
+    if (qzIndex < quizQuestions.length - 1) {
+      qzIndex++;
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  });
+}
+
+function showResult() {
+  let score = 0;
+  qzAnswers.forEach((a, i) => {
+    if (a !== null) score += quizQuestions[i].weights[a];
+  });
+  const max = quizQuestions.length * 3;
+  const pct = Math.round((score / max) * 10);
+  const normalized = Math.max(0, Math.min(10, pct));
+
+  let profile, description, color;
+  if (normalized <= 4) {
+    profile = 'Cuidado Inicial';
+    description = 'Há muito a descobrir sobre os cuidados com a pele. Pequenos ajustes na rotina, como proteção solar diária e higienização adequada, já trazem grandes benefícios. Continue explorando.';
+    color = 'var(--rose-deep)';
+  } else if (normalized <= 6) {
+    profile = 'Cuidado Consciente';
+    description = 'Você demonstra bons hábitos de cuidado facial, mas ainda pode aprender mais sobre componentes dos produtos, proteção solar e funcionamento da pele. A ciência tem mais a oferecer.';
+    color = 'var(--yellow-deep)';
+  } else if (normalized <= 8) {
+    profile = 'Cuidado Consistente';
+    description = 'Sua rotina é bem estruturada e seus hábitos refletem informação. Continue se atualizando, mas saiba que cada pele é única — ouvir a sua e buscar orientação profissional é sempre importante.';
+    color = 'var(--blue)';
+  } else {
+    profile = 'Cuidado Avançado';
+    description = 'Você demonstra conhecimento sólido sobre cuidados faciais. Mantenha a curiosidade ativa, priorize sempre a orientação de profissionais habilitados e adapte a rotina às necessidades reais da sua pele.';
+    color = 'var(--rose-deep)';
+  }
+
+  qzCard.innerHTML = `
+    <div class="qz-result show">
+      <div class="qz-result-band">Seu perfil · Resultado</div>
+      <h3 class="qz-result-title">${profile}<em>.</em></h3>
+      <div class="qz-result-score">
+        <div class="qz-score-num">${normalized}<em>/10</em></div>
+        <div class="qz-score-label">Conhecimento sobre<br>cuidados faciais</div>
+      </div>
+      <p class="qz-result-text">${description}</p>
+      <div class="qz-nav" style="margin-top:0;padding-top:0;border-top:none">
+        <button class="qz-btn ghost" id="qzRestart">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6 A4 4 0 1 0 6 2"/><path d="M6 2 L3 2 L3 5"/></svg>
+          Refazer
+        </button>
+        <button class="qz-btn primary" onclick="document.getElementById('challenge').scrollIntoView({behavior:'smooth'})">
+          Ir ao desafio
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2 L8 6 L4 10"/></svg>
+        </button>
+      </div>
+      <p style="margin-top:32px;font-size:12px;color:var(--ink-2);line-height:1.5;padding-top:24px;border-top:1px solid var(--line)">
+        <strong>Atenção:</strong> este resultado é educativo e não constitui diagnóstico dermatológico. Em caso de dúvidas específicas sobre sua pele, consulte um profissional habilitado.
+      </p>
+    </div>
+  `;
+
+  $('#qzRestart').addEventListener('click', () => {
+    qzIndex = 0;
+    qzAnswers = new Array(quizQuestions.length).fill(null);
+    renderQuestion();
+  });
+}
+
+renderQuestion();
+
+/* ============================================================
+   MYTH / TRUTH
+   ============================================================ */
+const mythQuestions = [
+  {
+    statement: 'Espremer espinhas ajuda a fazê-las desaparecer mais rápido.',
+    answer: 'mito',
+    explain: '<strong>Mito.</strong> Espremer espinhas pode piorar a inflamação, aumentar o risco de marcas e espalhar bactérias. O ideal é procurar tratamento adequado com um profissional.'
+  },
+  {
+    statement: 'O protetor solar deve ser utilizado mesmo em dias nublados.',
+    answer: 'verdade',
+    explain: '<strong>Verdade.</strong> A radiação ultravioleta atravessa nuvens. O protetor solar deve fazer parte da rotina diária, independentemente das condições climáticas.'
+  },
+  {
+    statement: 'Beber água sozinho resolve todos os problemas da pele.',
+    answer: 'mito',
+    explain: '<strong>Mito.</strong> A hidratação é importante para a saúde geral e pode influenciar a pele, mas não substitui cuidados tópicos como limpeza, hidratação e proteção solar.'
+  },
+  {
+    statement: 'Todo produto natural é necessariamente seguro para a pele.',
+    answer: 'mito',
+    explain: '<strong>Mito.</strong> "Natural" não significa automaticamente seguro. Substâncias naturais também podem causar alergias, irritações e reações. A segurança depende da formulação e do uso adequado.'
+  },
+  {
+    statement: 'A pele possui diferentes camadas com funções distintas.',
+    answer: 'verdade',
+    explain: '<strong>Verdade.</strong> A pele é composta por camadas principais — epiderme, derme e hipoderme — cada uma com estruturas e funções específicas.'
+  }
+];
+
+let mythIndex = 0;
+let mythScore = 0;
+const myCard = $('#myCard');
+const myScore = $('#myScore');
+const myProgress = $$('.my-progress-item');
+
+function renderMyth() {
+  if (mythIndex >= mythQuestions.length) {
+    myCard.innerHTML = `
+      <div class="qz-result show" style="text-align:center;align-items:center;display:flex;flex-direction:column;gap:24px;width:100%">
+        <div class="qz-result-band">Resultado final</div>
+        <div class="qz-score-num" style="font-size:120px">${mythScore}<em>/${mythQuestions.length}</em></div>
+        <p class="qz-result-text" style="margin:0 auto">Você acertou ${mythScore} de ${mythQuestions.length} afirmações. Mitos sobre cuidados com a pele circulam com facilidade — verificar em fontes confiáveis é o melhor caminho.</p>
+        <button class="qz-btn primary" id="myPlayAgain">Jogar novamente</button>
+      </div>
+    `;
+    $('#myPlayAgain').addEventListener('click', () => {
+      mythIndex = 0;
+      mythScore = 0;
+      myScore.textContent = '0';
+      myProgress.forEach(p => { p.classList.remove('done', 'correct', 'wrong'); });
+      renderMyth();
+    });
+    return;
+  }
+
+  const m = mythQuestions[mythIndex];
+  myCard.innerHTML = `
+    <div class="my-counter">
+      <span>Afirmação <span class="now">${mythIndex + 1} / ${mythQuestions.length}</span></span>
+      <span>Placar: <span class="now">${mythScore}</span></span>
+    </div>
+    <h3 class="my-statement">"${m.statement}"</h3>
+    <div class="my-choices">
+      <button class="my-choice" data-a="mito">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4 L16 16 M16 4 L4 16"/></svg>
+        Mito
+      </button>
+      <button class="my-choice" data-a="verdade">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 10 L8 14 L16 6"/></svg>
+        Verdade
+      </button>
+    </div>
+    <div class="my-explain" id="myExplain">${m.explain}</div>
+  `;
+
+  $$('.my-choice').forEach(c => {
+    c.addEventListener('click', () => {
+      const a = c.dataset.a;
+      const correct = a === m.answer;
+      if (correct) mythScore++;
+      myScore.textContent = mythScore;
+      myProgress[mythIndex].classList.add('done', correct ? 'correct' : 'wrong');
+
+      $$('.my-choice').forEach(ch => {
+        ch.disabled = true;
+        if (ch.dataset.a === m.answer) ch.classList.add('correct');
+        else if (ch === c) ch.classList.add('wrong');
+      });
+
+      setTimeout(() => {
+        $('#myExplain').classList.add('show');
+        setTimeout(() => {
+          mythIndex++;
+          renderMyth();
+        }, 2400);
+      }, 300);
+    });
+  });
+}
+renderMyth();
+
+$('#myRestart').addEventListener('click', () => {
+  mythIndex = 0;
+  mythScore = 0;
+  myScore.textContent = '0';
+  myProgress.forEach(p => { p.classList.remove('done', 'correct', 'wrong'); });
+  renderMyth();
+});
+
+/* ============================================================
+   CHALLENGE (10 questions)
+   ============================================================ */
+const challengeQuestions = [
+  { q: 'Qual é a camada mais externa da pele?', o: ['Derme', 'Hipoderme', 'Epiderme', 'Subcutâneo'], c: 2 },
+  { q: 'A proteína mais abundante da derme é:', o: ['Queratina', 'Colágeno', 'Elastina', 'Albumina'], c: 1 },
+  { q: 'Qual vitamina é precursora dos retinoides?', o: ['Vitamina C', 'Vitamina A', 'Vitamina D', 'Vitamina E'], c: 1 },
+  { q: 'O ácido hialurônico é conhecido principalmente por sua capacidade de:', o: ['Esfoliar a pele', 'Reter água', 'Promover descamação', 'Filtrar UV'], c: 1 },
+  { q: 'O protetor solar deve ser usado:', o: ['Só no verão', 'Só em dias de sol', 'Diariamente, inclusive em dias nublados', 'Apenas ao sair'], c: 2 },
+  { q: 'A pele é considerada:', o: ['Um tecido simples', 'O maior órgão do corpo humano', 'Um sistema sem função imune', 'Uma estrutura exclusivamente estética'], c: 1 },
+  { q: 'O microagulhamento utiliza:', o: ['Calor intenso', 'Pequenas agulhas para perfurações controladas', 'Ácidos fortes', 'Luz pulsada'], c: 1 },
+  { q: 'A niacinamida é uma forma da vitamina:', o: ['A', 'C', 'B3', 'D'], c: 2 },
+  { q: 'Com o envelhecimento, é natural haver:', o: ['Aumento da produção de colágeno', 'Redução progressiva de colágeno e elastina', 'Engrossamento uniforme da pele', 'Aumento da hidratação natural'], c: 1 },
+  { q: 'Procedimentos estéticos devem ser realizados por:', o: ['Qualquer pessoa interessada', 'Profissionais habilitados e conforme indicação', 'Apenas médicos estrangeiros', 'Somente em casa'], c: 1 }
+];
+
+let chIndex = 0;
+let chScore = 0;
+const chCard = $('#chCard');
+
+function renderChallenge() {
+  if (chIndex >= challengeQuestions.length) {
+    let title, text;
+    if (chScore <= 3) { title = 'Aprendiz da Pele'; text = 'Você está começando sua jornada. Continue explorando a experiência — cada camada guarda um ensinamento.'; }
+    else if (chScore <= 6) { title = 'Explorador da Estética'; text = 'Você tem uma boa base. Aprofunde-se nos detalhes — a ciência da pele é um campo vasto.'; }
+    else if (chScore <= 8) { title = 'Especialista em Cuidados'; text = 'Excelente. Seu conhecimento é consistente. Compartilhe o que aprendeu.'; }
+    else { title = 'Mestre da Pele'; text = 'Domínio notável. Você internalizou a ciência por trás do cuidado facial.'; }
+
+    chCard.innerHTML = `
+      <div class="ch-final show">
+        <div class="ch-confetti" id="confetti"></div>
+        <div class="ch-final-band">Resultado final</div>
+        <h3 class="ch-final-title">${title}<em>.</em></h3>
+        <div class="ch-final-score">${chScore}<span class="of">/10</span></div>
+        <p class="ch-final-text">${text}</p>
+        <button class="qz-btn primary" id="chPlayAgain">
+          Jogar novamente
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6 A4 4 0 1 0 6 2"/><path d="M6 2 L3 2 L3 5"/></svg>
+        </button>
+      </div>
+    `;
+    $('#chPlayAgain').addEventListener('click', () => {
+      chIndex = 0;
+      chScore = 0;
+      renderChallenge();
+    });
+    if (chScore >= 7) launchConfetti();
+    return;
+  }
+
+  const q = challengeQuestions[chIndex];
+  chCard.innerHTML = `
+    <div class="ch-meta">
+      <span>Desafio <span class="ch-q-num">${chIndex + 1} / ${challengeQuestions.length}</span></span>
+      <span>Pontos: <span class="ch-q-num">${chScore}</span></span>
+    </div>
+    <h3 class="ch-question">${q.q}</h3>
+    <div class="ch-options">
+      ${q.o.map((opt, i) => `
+        <button class="ch-option" data-i="${i}">
+          <span class="opt-letter">${String.fromCharCode(65 + i)}</span>
+          <span>${opt}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="ch-feedback" id="chFeedback"></div>
+  `;
+
+  $$('.ch-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const i = parseInt(opt.dataset.i);
+      const correct = i === q.c;
+      if (correct) chScore++;
+      $$('.ch-option').forEach((o, j) => {
+        o.disabled = true;
+        if (j === q.c) o.classList.add('correct');
+        if (j === i && !correct) o.classList.add('wrong');
+      });
+      const fb = $('#chFeedback');
+      fb.innerHTML = correct ? '<strong>Correto.</strong> Boa leitura.' : '<strong>Atenção.</strong> Reveja esta seção da experiência.';
+      fb.classList.add('show');
+      setTimeout(() => {
+        chIndex++;
+        renderChallenge();
+      }, 1600);
+    });
+  });
+}
+renderChallenge();
+
+function launchConfetti() {
+  const c = $('#confetti');
+  if (!c) return;
+  const colors = ['#D88A92', '#E8C547', '#3A4A6B', '#F2D6D9', '#B6636B'];
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDelay = (Math.random() * 1) + 's';
+    p.style.animationDuration = (2 + Math.random() * 2) + 's';
+    p.style.transform = `rotate(${Math.random() * 360}deg)`;
+    c.appendChild(p);
+    setTimeout(() => p.remove(), 4000);
+  }
+}
+
+/* ============================================================
+   URL HASH — direct jump to face explorer for QR code
+   ============================================================ */
+if (window.location.hash === '#explore') {
+  setTimeout(() => {
+    document.getElementById('explore').scrollIntoView({ behavior: 'auto' });
+  }, 200);
+}
+
+</script>
+</body>
+</html>
